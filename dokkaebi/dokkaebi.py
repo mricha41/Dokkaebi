@@ -121,10 +121,10 @@ class Dokkaebi(object):
 		retrieved from Telegram webhook request
 		"""
 
-	def setWebhook(self, payload = None):
+	def setWebhook(self, hook = None):
 		"""
-		Sets the Telegram Bot webhook using supplied payload
-		or supplied payload in the form:
+		Sets the Telegram Bot webhook, defaults to using the current hook information
+		stored in Dokkaebi or by passing in a dictionary in the form:
 		{"url": "https://yourwebhookurl.com"}
 
 		PRECONDITION:
@@ -137,14 +137,15 @@ class Dokkaebi(object):
 			* request status code returned indicates one of the following types of errors:
 				* internal server error
 				* client error
+				* request object returned
 		See the Telegram Bot API documentation for more information about what
 		status codes may be returned when a request is made to /setWebhook.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setWebhook'
-		if(payload == None):
+		if(hook == None):
 			r = requests.post(url, data = {"url": self.webhook_config["url"]})
 		else:
-			self.webhook_config["url"] = payload["url"]
+			self.webhook_config["url"] = hook["url"]
 			r = requests.post(url, data = {"url": self.webhook_config["url"]})
 
 		if(r.status_code == 200):
@@ -154,7 +155,7 @@ class Dokkaebi(object):
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
-		return
+		return r
 
 	def getWebhookInfo(self):
 		"""
@@ -167,9 +168,10 @@ class Dokkaebi(object):
 		
 		POSTCONDITION:
 		Dokkaebi sends the request to get the webhook information from Telegram. Upon success,
-		a json object is printed to the console and the request object is
+		a json object is printed to the console and the jsont is
 		returned to the caller (see Python requests	documentation for more 
-		information on what is returned from requests.get(...)). Also, see the
+		information on what is returned from requests.get(...)). In the event of an error,
+		the request object is returned after error is printed to the console. Also, see the
 		Telegram Bot API documentation for what types of status codes to expect
 		when making a request to /getWebhookInfo.
 		"""
@@ -178,12 +180,12 @@ class Dokkaebi(object):
 		if(r.status_code == 200):
 			print("Webhook info:")
 			print(r.json())
+			return r.json()["result"]
 		else:
 			print("Webhook info could not be retrieved - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
-
-		return r.json()["result"]
+				return r
 
 	def deleteWebhook(self):
 		"""
@@ -213,7 +215,7 @@ class Dokkaebi(object):
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
-		return
+		return r
 
 	def getMe(self):
 		"""
@@ -225,19 +227,20 @@ class Dokkaebi(object):
 		POSTCONDITION:
 		If the request succeeds, a JSON object with the bot info will be returned.
 		Otherwise, the request failed with an error and the request object is printed
-		to the console.
+		to the console and returned. Also, see the Telegram Bot API documentation for 
+		what types of status codes to expect when making a request to /getMe.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getMe'
 		r = requests.get(url)
 		if(r.status_code == 200):
 			print("Bot information:")
 			print(r.json())
+			return r.json()["result"]
 		else:
 			print("Bot information could not be retrieved - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
-
-		return r.json()["result"]
+				return r		
 
 	def setMyCommands(self, commands):
 		"""
@@ -263,10 +266,11 @@ class Dokkaebi(object):
 		Either no list or a previous list of commands may exist.
 		
 		POSTCONDITION:
-		If the request succeeds, the bot command list will be overwritten on Telegram.
+		If the request succeeds, the bot command list will be overwritten on Telegram and
+		a request object returned to the caller for optional processing.
 		If the request fails, Telegram should revert to the existing list or the default
-		list if a list was never supplied to the Bot Father. Otherwise, the request 
-		failed with an error and the request object is printed to the console.
+		list if a list was never supplied to the Bot Father. Otherwise, if the request 
+		failed with an error the request object is printed to the console and returned to the caller.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setMyCommands'
 		r = requests.post(url, json = commands)
@@ -277,7 +281,7 @@ class Dokkaebi(object):
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 		
-		return
+		return r
 
 	def getMyCommands(self):
 		"""
@@ -290,41 +294,51 @@ class Dokkaebi(object):
 		
 		POSTCONDITION:
 		The current command list will be returned as JSON if the
-		request succeeds. Otherwise, the request failed with an error 
-		and the request object is printed to the console.
+		request succeeds. Otherwise, if the request failed with an error 
+		the request object is printed to the console and returned to the caller. 
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getMyCommands'
 		r = requests.get(url)
 		if(r.status_code == 200):
 			print("Command list:")
 			print(r.json())
+			return r.json()
 		else:
 			print("Commands could not be retrieved - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
-		
-		return r.json()
+				return r
 
-	def sendDice(self, chat_id = None):
+	def sendDice(self, dice_data = None):
 		"""
 		Send dice to the Telegram user.
 		Does not require parameters because Dokkaebi
 		keeps track of the chat id internally and sends
 		the dice to the corresponding chat automatically.
-		Override the default chat_id parameter to a dictionary of the following form:
-		{ "chat_id": YOURCHATID } #string or integer according to Telegram API docs
+		Dokkaebi keeps track of the current chat id internally, but
+		it can also be overridden at your option.
+		Override the default dice_data parameter to a dictionary of the following form
+		(only chat_id parameter is required):
+		{ 
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"emoji": None, #optional - accepts a string with unicode value or copy/paste literal emoji (probably works).
+			"disable_notification": None, #optional - boolean disables notification sound and sends dice silently.
+			"reply_to_message_id": None, #optional - integer optional message id if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+		}
 
 		PRECONDITION:
-		A Telegram bot has been created, the Dokkaebi instance has been constructed, and
-		the chat_id mus exist.
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
-		Otherwise, the request failed with an error and the request object is printed
-		to the console.
+		The dice have been sent to the Telegram user and the request object is returned
+		to the caller to process at their option.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDice'
-		if chat_id is not None:
-			r = requests.post(url, data = chat_id)
+		if dice_data is not None:
+			r = requests.post(url, data = dice_data)
 		else:
 			r = requests.post(url, data = {"chat_id": self.chat_info["id"]})
 
@@ -335,28 +349,32 @@ class Dokkaebi(object):
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 		
-		return
+		return r
 
-	def sendMessage(self, msg, chat_id = None):
+	def sendMessage(self, message_data):
 		"""
-		Send a message to the Telegram user.
-		Dokkaebi keeps track of the chat id internally and sends
-		the dice to the corresponding chat automatically.
-		Override the default chat_id parameter to a dictionary of the following form:
-		{ "chat_id": YOURCHATID } #string or integer according to Telegram API docs
+		Sends a message to the Telegram user.
+		The message_data parameter should be a dictionary of the following form:
+		{ 
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs
+			"text": "YOUR MESSAGE", #required - the message text you want to send.
+			"parse_mode": None, #optional - string for html or markdown if desired (See Telegram API documentation).
+			"disable_web_page_preview": None, #optional - boolean disables a web preview if sending a link.
+			"disable_notification": None, #optional - boolean disables notification sound and sends message silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+		}
 
 		PRECONDITION:
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
-		On success, the Telegram user receives the text in the client. If the request
-		fails, the error and request object returned are printed to the console.
+		On success, the Telegram user receives the text in the client. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendMessage'
-		if chat_id is not None:
-			r = requests.post(url, data = chat_id)
-		else:
-			r = requests.post(url, data = {"chat_id": self.chat_info["id"], "text": msg})
+		r = requests.post(url, data = message_data)
 
 		if(r.status_code == 200):
 			print("Message sent...")
@@ -365,7 +383,29 @@ class Dokkaebi(object):
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 		
-		return
+		return r
+
+	def forwardMessage(self, message_data):
+		"""
+		STUB
+		{
+			"chat_id": CHATID,
+			"from_chat_id": FROMCHATID,
+			"message_id": MESSAGEID,
+			"disable_notification": None
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/forwardMessage'
+		r = requests.post(url, data = message_data)
+
+		if(r.status_code == 200):
+			print("Message sent...")
+		else:
+			print("Message could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 
 	def closeServer(self):
 		"""
