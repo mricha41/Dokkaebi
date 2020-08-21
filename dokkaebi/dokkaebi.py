@@ -362,7 +362,7 @@ class Dokkaebi(object):
 			"disable_web_page_preview": None, #optional - boolean disables a web preview if sending a link.
 			"disable_notification": None, #optional - boolean disables notification sound and sends message silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
-			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
 		PRECONDITION:
@@ -387,7 +387,7 @@ class Dokkaebi(object):
 
 	def forwardMessage(self, message_data):
 		"""
-		STUB
+		Forward a message to a Telegram user.
 		{
 			"chat_id": CHATID,
 			"from_chat_id": FROMCHATID,
@@ -402,6 +402,59 @@ class Dokkaebi(object):
 			print("Message sent...")
 		else:
 			print("Message could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def sendPhoto(self, photo_data):
+		"""
+		Send a photo to a Telegram user.
+		{
+			"chat_id": CHATID,
+			"photo": FILEORURL, #required - input file, file_id as string or url to photo as string (see Telegram API doc).
+			"caption": "CAPTION", #optional - description of the photo.
+			"parse_mode": None, #optional - html or markdown (see Telegram API doc).
+			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendPhoto'
+		r = requests.post(url, data = photo_data)
+
+		if(r.status_code == 200):
+			print("Photo sent...")
+		else:
+			print("Photo could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def sendAudio(self, audio_data):
+		"""
+		Send audio to a Telegram user.
+		{
+			"chat_id": CHATID,
+			"audio": FILEORURL, #required - input file, file_id as string or url to audio file as string (see Telegram API doc).
+			"caption": "CAPTION", #optional - string description of the photo.
+			"parse_mode": None, #optional - string html or markdown (see Telegram API doc).
+			"duration": None, #optional - int duration in seconds.
+			"performer": None, #optional - string performer name.
+			"title": None, #optional - string title of audio.
+			"thumb": None, #optional - input file or string (see Telegram API doc) 
+			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio'
+
+		if(r.status_code == 200):
+			print("Audio sent...")
+		else:
+			print("Audio could not be set - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
