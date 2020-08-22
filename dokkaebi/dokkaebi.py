@@ -240,7 +240,384 @@ class Dokkaebi(object):
 			print("Bot information could not be retrieved - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
-				return r		
+				return r
+
+	def sendMessage(self, message_data):
+		"""
+		Sends a message to the Telegram user.
+		The message_data parameter should be a dictionary of the following form:
+		{ 
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs
+			"text": "YOUR MESSAGE", #required - the message text you want to send.
+			"parse_mode": None, #optional - string for html or markdown if desired (See Telegram API documentation).
+			"disable_web_page_preview": None, #optional - boolean disables a web preview if sending a link.
+			"disable_notification": None, #optional - boolean disables notification sound and sends message silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+		}
+
+		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
+
+		POSTCONDITION:
+		On success, the Telegram user receives the text in the client. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendMessage'
+		r = requests.post(url, data = message_data)
+
+		if(r.status_code == 200):
+			print("Message sent...")
+		else:
+			print("Message could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+		
+		return r
+
+	def forwardMessage(self, message_data):
+		"""
+		Forward a message to a Telegram user.
+		{
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs
+			"from_chat_id": FROMCHATID,
+			"message_id": MESSAGEID,
+			"disable_notification": None
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/forwardMessage'
+		r = requests.post(url, data = message_data)
+
+		if(r.status_code == 200):
+			print("Message sent...")
+		else:
+			print("Message could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def sendPhoto(self, photo_data):
+		"""
+		Send a photo to a Telegram user.
+		{
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs
+			"photo": FILEORURL, #required - input file, file_id as string or url to photo as string (see Telegram API doc).
+			"caption": "CAPTION", #optional - description of the photo.
+			"parse_mode": None, #optional - html or markdown (see Telegram API doc).
+			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendPhoto'
+		r = requests.post(url, data = photo_data)
+
+		if(r.status_code == 200):
+			print("Photo sent...")
+		else:
+			print("Photo could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def sendAudio(self, audio_data):
+		"""
+		Send audio to a Telegram user.
+		{
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs
+			"audio": FILEORURL, #required - input file, file_id as string or url to audio file as string (see Telegram API doc).
+			"caption": "CAPTION", #optional - string description of the photo.
+			"parse_mode": None, #optional - string html or markdown (see Telegram API doc).
+			"duration": None, #optional - int duration in seconds.
+			"performer": None, #optional - string performer name.
+			"title": None, #optional - string title of audio.
+			"thumb": None, #optional - input file or string (see Telegram API doc) 
+			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio'
+		r = requests.post(url, data = audio_data)
+
+		if(r.status_code == 200):
+			print("Audio sent...")
+		else:
+			print("Audio could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def sendDocument(self, document_data):
+		"""
+		Send a document to a Telegram user.
+		{
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs
+			"document": FILEORURL, #required - input file, file_id as string or url to document as string (see Telegram API doc).
+			"thumb": None, #optional - input file or string (see Telegram API doc)
+			"caption": "CAPTION", #optional - string description of the document.
+			"parse_mode": None, #optional - string html or markdown (see Telegram API doc).
+			"disable_notification": None, #optional disable notification sound to send document to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDocument'
+		r = requests.post(url, data = document_data)
+
+		if(r.status_code == 200):
+			print("Document sent...")
+		else:
+			print("Document could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def sendVideo(self, video_data):
+		"""
+		Send a video to a Telegram user.
+		{
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs
+			"video": FILEORURL, #required - input file, file_id as string or url to video file as string (see Telegram API doc).
+			"duration": None, #optional - int duration in seconds.
+			"width": None, #optional - int width of video.
+			"height": None, #optional - int height of video.
+			"thumb": None, #optional - input file or string (see Telegram API doc)
+			"caption": "CAPTION", #optional - string description of the video.
+			"parse_mode": None, #optional - string html or markdown for video caption (see Telegram API doc).
+			"supports_streaming": None, #optional - True if video can be streamed.			 
+			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+		}
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideo'
+		r = requests.post(url, data = video_data)
+
+		if(r.status_code == 200):
+			print("Video sent...")
+		else:
+			print("Video could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+	
+	def sendAnimation(self):
+		"""
+		STUB
+		"""
+
+	def sendVoice(self):
+		"""
+		STUB
+		"""
+
+	def sendVideoNote(self):
+		"""
+		STUB
+		"""
+
+	def sendMediaGroup(self):
+		"""
+		STUB
+		"""
+
+	def sendLocation(self):
+		"""
+		STUB
+		"""
+
+	def editMessageLiveLocation(self):
+		"""
+		STUB
+		"""
+
+	def stopMessageLiveLocation(self):
+		"""
+		STUB
+		"""
+
+	def sendVenue(self):
+		"""
+		STUB
+		"""
+	def sendContact(self):
+		"""
+		STUB
+		"""
+
+	def sendPoll(self):
+		"""
+		STUB
+		"""
+
+	def sendDice(self, dice_data = None):
+		"""
+		Send dice to the Telegram user.
+		Does not require parameters because Dokkaebi
+		keeps track of the chat id internally and sends
+		the dice to the corresponding chat automatically.
+		Dokkaebi keeps track of the current chat id internally, but
+		it can also be overridden at your option.
+		Override the default dice_data parameter to a dictionary of the following form
+		(only chat_id parameter is required):
+		{ 
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"emoji": None, #optional - accepts a string with unicode value or copy/paste literal emoji (probably works).
+			"disable_notification": None, #optional - boolean disables notification sound and sends dice silently.
+			"reply_to_message_id": None, #optional - integer optional message id if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+		}
+
+		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
+
+		POSTCONDITION:
+		The dice have been sent to the Telegram user and the request object is returned
+		to the caller to process at their option.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDice'
+		if dice_data is not None:
+			r = requests.post(url, data = dice_data)
+		else:
+			r = requests.post(url, data = {"chat_id": self.chat_info["id"]})
+
+		if(r.status_code == 200):
+			print("Dice sent...")
+		else:
+			print("Dice could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+		
+		return r
+
+	def sendChatAction(self):
+		"""
+		STUB
+		"""
+
+	def getUserProfilePhotos(self):
+		"""
+		STUB
+		"""
+
+	def getFile(self):
+		"""
+		STUB
+		"""
+
+	def kickChatMember(self):
+		"""
+		STUB
+		"""
+
+	def unbanChatMember(self):
+		"""
+		STUB
+		"""
+
+	def restrictChatMember(self):
+		"""
+		STUB
+		"""
+
+	def promoteChatMember(self):
+		"""
+		STUB
+		"""
+
+	def setChatAdministratorCustomTitle(self):
+		"""
+		STUB
+		"""
+
+	def setChatPermissions(self):
+		"""
+		STUB
+		"""
+
+	def exportChatInviteLink(self):
+		"""
+		STUB
+		"""
+
+	def setChatPhoto(self):
+		"""
+		STUB
+		"""
+
+	def deleteChatPhoto(self):
+		"""
+		STUB
+		"""
+
+	def setChatTitle(self):
+		"""
+		STUB
+		"""
+
+	def setChatDescription(self):
+		"""
+		STUB
+		"""
+
+	def pinChatMessage(self):
+		"""
+		STUB
+		"""
+
+	def unpinChatMessage(self):
+		"""
+		STUB
+		"""
+
+	def leaveChat(self):
+		"""
+		STUB
+		"""
+
+	def getChat(self):
+		"""
+		STUB
+		"""
+
+	def getChatAdministrators(self):
+		"""
+		STUB
+		"""
+
+	def getChatMembersCount(self):
+		"""
+		STUB
+		"""
+
+	def getChatMember(self):
+		"""
+		STUB
+		"""
+
+	def setChatStickerSet(self):
+		"""
+		STUB
+		"""
+
+	def deleteChatStickerSet(self):
+		"""
+		STUB
+		"""
+
+	def answerCallbackQuery(self):
+		"""
+		STUB
+		"""
 
 	def setMyCommands(self, commands):
 		"""
@@ -308,157 +685,6 @@ class Dokkaebi(object):
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 				return r
-
-	def sendDice(self, dice_data = None):
-		"""
-		Send dice to the Telegram user.
-		Does not require parameters because Dokkaebi
-		keeps track of the chat id internally and sends
-		the dice to the corresponding chat automatically.
-		Dokkaebi keeps track of the current chat id internally, but
-		it can also be overridden at your option.
-		Override the default dice_data parameter to a dictionary of the following form
-		(only chat_id parameter is required):
-		{ 
-			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
-			"emoji": None, #optional - accepts a string with unicode value or copy/paste literal emoji (probably works).
-			"disable_notification": None, #optional - boolean disables notification sound and sends dice silently.
-			"reply_to_message_id": None, #optional - integer optional message id if the message is a reply.
-			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
-		}
-
-		PRECONDITION:
-		A Telegram bot has been created and the Dokkaebi instance has been constructed.
-
-		POSTCONDITION:
-		The dice have been sent to the Telegram user and the request object is returned
-		to the caller to process at their option.
-		Otherwise, if the request failed with an error the request object is printed
-		to the console and returned.
-		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDice'
-		if dice_data is not None:
-			r = requests.post(url, data = dice_data)
-		else:
-			r = requests.post(url, data = {"chat_id": self.chat_info["id"]})
-
-		if(r.status_code == 200):
-			print("Dice sent...")
-		else:
-			print("Dice could not be set - error: " + format(r.status_code))
-			if r and r is not None:
-				print("Request object returned: \n" + r.text)
-		
-		return r
-
-	def sendMessage(self, message_data):
-		"""
-		Sends a message to the Telegram user.
-		The message_data parameter should be a dictionary of the following form:
-		{ 
-			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs
-			"text": "YOUR MESSAGE", #required - the message text you want to send.
-			"parse_mode": None, #optional - string for html or markdown if desired (See Telegram API documentation).
-			"disable_web_page_preview": None, #optional - boolean disables a web preview if sending a link.
-			"disable_notification": None, #optional - boolean disables notification sound and sends message silently.
-			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
-			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
-		}
-
-		PRECONDITION:
-		A Telegram bot has been created and the Dokkaebi instance has been constructed.
-
-		POSTCONDITION:
-		On success, the Telegram user receives the text in the client. 
-		Otherwise, if the request failed with an error the request object is printed
-		to the console and returned.
-		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendMessage'
-		r = requests.post(url, data = message_data)
-
-		if(r.status_code == 200):
-			print("Message sent...")
-		else:
-			print("Message could not be set - error: " + format(r.status_code))
-			if r and r is not None:
-				print("Request object returned: \n" + r.text)
-		
-		return r
-
-	def forwardMessage(self, message_data):
-		"""
-		Forward a message to a Telegram user.
-		{
-			"chat_id": CHATID,
-			"from_chat_id": FROMCHATID,
-			"message_id": MESSAGEID,
-			"disable_notification": None
-		}
-		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/forwardMessage'
-		r = requests.post(url, data = message_data)
-
-		if(r.status_code == 200):
-			print("Message sent...")
-		else:
-			print("Message could not be set - error: " + format(r.status_code))
-			if r and r is not None:
-				print("Request object returned: \n" + r.text)
-
-		return r
-
-	def sendPhoto(self, photo_data):
-		"""
-		Send a photo to a Telegram user.
-		{
-			"chat_id": CHATID,
-			"photo": FILEORURL, #required - input file, file_id as string or url to photo as string (see Telegram API doc).
-			"caption": "CAPTION", #optional - description of the photo.
-			"parse_mode": None, #optional - html or markdown (see Telegram API doc).
-			"disable_notification": None, #optional disable notification sound to send photo to user silently.
-			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
-			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
-		}
-		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendPhoto'
-		r = requests.post(url, data = photo_data)
-
-		if(r.status_code == 200):
-			print("Photo sent...")
-		else:
-			print("Photo could not be set - error: " + format(r.status_code))
-			if r and r is not None:
-				print("Request object returned: \n" + r.text)
-
-		return r
-
-	def sendAudio(self, audio_data):
-		"""
-		Send audio to a Telegram user.
-		{
-			"chat_id": CHATID,
-			"audio": FILEORURL, #required - input file, file_id as string or url to audio file as string (see Telegram API doc).
-			"caption": "CAPTION", #optional - string description of the photo.
-			"parse_mode": None, #optional - string html or markdown (see Telegram API doc).
-			"duration": None, #optional - int duration in seconds.
-			"performer": None, #optional - string performer name.
-			"title": None, #optional - string title of audio.
-			"thumb": None, #optional - input file or string (see Telegram API doc) 
-			"disable_notification": None, #optional disable notification sound to send photo to user silently.
-			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
-			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
-		}
-		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio'
-
-		if(r.status_code == 200):
-			print("Audio sent...")
-		else:
-			print("Audio could not be set - error: " + format(r.status_code))
-			if r and r is not None:
-				print("Request object returned: \n" + r.text)
-
-		return r
 
 	def closeServer(self):
 		"""
