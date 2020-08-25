@@ -244,7 +244,7 @@ class Dokkaebi(object):
 
 	def sendMessage(self, message_data):
 		"""
-		Sends a message to the Telegram user.
+		Sends a message to Telegram.
 		The message_data parameter should be a dictionary of the following form:
 		{ 
 			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs
@@ -260,7 +260,7 @@ class Dokkaebi(object):
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
-		On success, the Telegram user receives the text in the client. 
+		On success, Telegram receives the message. 
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
@@ -278,13 +278,17 @@ class Dokkaebi(object):
 
 	def forwardMessage(self, message_data):
 		"""
-		Forward a message to a Telegram user.
+		Forward a message to Telegram.
 		{
 			"chat_id": CHATID, #required - string or integer according to Telegram API docs
 			"from_chat_id": FROMCHATID,
 			"message_id": MESSAGEID,
 			"disable_notification": None
 		}
+
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/forwardMessage'
 		r = requests.post(url, data = message_data)
@@ -300,7 +304,7 @@ class Dokkaebi(object):
 
 	def sendPhoto(self, photo_data):
 		"""
-		Send a photo to a Telegram user.
+		Send a photo to Telegram.
 		{
 			"chat_id": CHATID, #required - string or integer according to Telegram API docs
 			"photo": FILEORURL, #required - input file, file_id as string or url to photo as string (see Telegram API doc).
@@ -310,6 +314,10 @@ class Dokkaebi(object):
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
+
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendPhoto'
 		r = requests.post(url, data = photo_data)
@@ -325,7 +333,7 @@ class Dokkaebi(object):
 
 	def sendAudio(self, audio_data):
 		"""
-		Send audio to a Telegram user.
+		Send audio to Telegram.
 		{
 			"chat_id": CHATID, #required - string or integer according to Telegram API docs
 			"audio": FILEORURL, #required - input file, file_id as string or url to audio file as string (see Telegram API doc).
@@ -339,6 +347,10 @@ class Dokkaebi(object):
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
+
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio'
 		r = requests.post(url, data = audio_data)
@@ -354,7 +366,7 @@ class Dokkaebi(object):
 
 	def sendDocument(self, document_data):
 		"""
-		Send a document to a Telegram user.
+		Send a document to Telegram.
 		{
 			"chat_id": CHATID, #required - string or integer according to Telegram API docs
 			"document": FILEORURL, #required - input file, file_id as string or url to document as string (see Telegram API doc).
@@ -365,6 +377,10 @@ class Dokkaebi(object):
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
+
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDocument'
 		r = requests.post(url, data = document_data)
@@ -380,7 +396,7 @@ class Dokkaebi(object):
 
 	def sendVideo(self, video_data):
 		"""
-		Send a video to a Telegram user.
+		Send a video to Telegram.
 		{
 			"chat_id": CHATID, #required - string or integer according to Telegram API docs
 			"video": FILEORURL, #required - input file, file_id as string or url to video file as string (see Telegram API doc).
@@ -395,6 +411,10 @@ class Dokkaebi(object):
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
+
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideo'
 		r = requests.post(url, data = video_data)
@@ -410,51 +430,121 @@ class Dokkaebi(object):
 	
 	def sendAnimation(self):
 		"""
-		STUB
+		Send an animation to Telegram.
+		{
+	
+		}
+
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def sendVoice(self):
 		"""
-		STUB
+		Send a voice message to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def sendVideoNote(self):
 		"""
-		STUB
+		Send a video note to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def sendMediaGroup(self):
 		"""
-		STUB
+		Send a group of photos or videos as an album to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def sendLocation(self):
 		"""
-		STUB
+		Send a location to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def editMessageLiveLocation(self):
 		"""
-		STUB
+		Edit a live location message.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def stopMessageLiveLocation(self):
 		"""
-		STUB
+		Stop a live location message.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def sendVenue(self):
 		"""
-		STUB
+		Send a venue to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 	def sendContact(self):
 		"""
-		STUB
+		Send a contact to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def sendPoll(self):
 		"""
-		STUB
+		Send a poll to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def sendDice(self, dice_data = None):
@@ -501,92 +591,218 @@ class Dokkaebi(object):
 
 	def sendChatAction(self):
 		"""
-		STUB
+		Send a chat action (indication that something is happening on the bot side) to Telegram.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def getUserProfilePhotos(self):
 		"""
-		STUB
+		Get a list of profile photos from a Telegram user.
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def getFile(self):
 		"""
-		STUB
+		Get information about a file and prepare it for downloading (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def kickChatMember(self):
 		"""
-		STUB
+		Remove a Telegram user from a chat (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def unbanChatMember(self):
 		"""
-		STUB
+		Unban a previously kicked Telegram user from a chat (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def restrictChatMember(self):
 		"""
-		STUB
+		Restrict a Telegram user (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def promoteChatMember(self):
 		"""
-		STUB
+		Promote or demote a Telegram user in a chat (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def setChatAdministratorCustomTitle(self):
 		"""
-		STUB
+		Set a custom title for an administrator in a chat promoted by the bot (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def setChatPermissions(self):
 		"""
-		STUB
+		Set default chat permissions for a chat (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def exportChatInviteLink(self):
 		"""
-		STUB
+		Generate a new invite link for a chat (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def setChatPhoto(self):
 		"""
-		STUB
+		Set the profile photo for the chat - does not work for private chats (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def deleteChatPhoto(self):
 		"""
-		STUB
+		Delete the profile photo for the chat - does not work for private chats (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def setChatTitle(self):
 		"""
-		STUB
+		Set the title of the chat - does not work for private chats (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def setChatDescription(self):
 		"""
-		STUB
+		Set the description of the chat - bot must be an administrator (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def pinChatMessage(self):
 		"""
-		STUB
+		Pin a message in a chat - bot must be an administrator (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def unpinChatMessage(self):
 		"""
-		STUB
+		Unpin a message in a chat - bot must be an administrator (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def leaveChat(self):
 		"""
-		STUB
+		Make bot leave a chat (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def getChat(self):
 		"""
-		STUB
+		Get information about a chat - returns a Chat json object (see Telegram API doc).
+		{
+	
+		}
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def getChatAdministrators(self):
