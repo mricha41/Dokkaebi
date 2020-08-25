@@ -110,15 +110,15 @@ class Dokkaebi(object):
 
 	def onInit(self):
 		"""
-		Override this method to handle tasks
-		that need to be handled upon construction
+		Override this method to hook into the constructor and
+		handle tasks that need to be handled upon construction
 		of the Dokkaebi class.
 		"""
 
 	def handleData(self, data):
 		"""
-		Override this method to handle json data
-		retrieved from Telegram webhook request
+		Override this method to hook into the update method and
+		handle json data retrieved from Telegram webhook request
 		"""
 
 	def setWebhook(self, hook = None):
@@ -126,6 +126,8 @@ class Dokkaebi(object):
 		Sets the Telegram Bot webhook, defaults to using the current hook information
 		stored in Dokkaebi or by passing in a dictionary in the form:
 		{"url": "https://yourwebhookurl.com"}
+
+		RETURNS: boolean
 
 		PRECONDITION:
 		A Telegram bot has been created and the Dokkaebi instance may or may not have been constructed.
@@ -161,6 +163,8 @@ class Dokkaebi(object):
 		"""
 		Retrieves and returns the current webhook info stored
 		in the Dokkaebi bot.
+
+		RETURNS: WebhookInfo json object
 		
 		PRECONDITION:
 		A Telegram bot has been created and the Dokkaebi instance may or may not have been constructed.
@@ -191,6 +195,8 @@ class Dokkaebi(object):
 		"""
 		Deletes the current webhook on Telegram and resets the internal webhook data
 		stored in the Dokkaebi bot.
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 		Dokkaebi bot must have webhook data assigned via the constructor. A Telegram
@@ -221,6 +227,8 @@ class Dokkaebi(object):
 		"""
 		Retrieves the current information about your bot from the Telegram API.
 		
+		RETURNS: User json object
+
 		PRECONDITION:
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 		
@@ -256,6 +264,8 @@ class Dokkaebi(object):
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
+		RETURNS: Message json object
+
 		PRECONDITION:
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
@@ -286,6 +296,8 @@ class Dokkaebi(object):
 			"disable_notification": None
 		}
 
+		RETURNS: sent Message json object
+
 		PRECONDITION:
 
 		POSTCONDITION:
@@ -314,6 +326,8 @@ class Dokkaebi(object):
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
+
+		RETURNS: sent Message json object
 
 		PRECONDITION:
 
@@ -348,6 +362,8 @@ class Dokkaebi(object):
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
+		RETURNS: sent Message json object
+
 		PRECONDITION:
 
 		POSTCONDITION:
@@ -377,6 +393,8 @@ class Dokkaebi(object):
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
+
+		RETURNS: sent Message json object
 
 		PRECONDITION:
 
@@ -412,6 +430,8 @@ class Dokkaebi(object):
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
+		RETURNS: sent Message json object
+		
 		PRECONDITION:
 
 		POSTCONDITION:
@@ -435,6 +455,8 @@ class Dokkaebi(object):
 	
 		}
 
+		RETURNS: sent Message json object
+
 		PRECONDITION:
 
 		POSTCONDITION:
@@ -446,6 +468,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: sent Message json object
 		
 		PRECONDITION:
 
@@ -458,6 +482,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: sent Message json object
 		
 		PRECONDITION:
 
@@ -470,6 +496,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: array of sent Message json object
 		
 		PRECONDITION:
 
@@ -494,6 +522,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: if bot owned the message a sent Message json object is returned, otherwise True is returned
 		
 		PRECONDITION:
 
@@ -506,6 +536,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: if bot owned the message a sent Message json object is returned, otherwise True is returned
 		
 		PRECONDITION:
 
@@ -518,6 +550,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: sent Message json object
 		
 		PRECONDITION:
 
@@ -529,6 +563,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: sent Message json object
 		
 		PRECONDITION:
 
@@ -541,6 +577,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: sent Message json object
 		
 		PRECONDITION:
 
@@ -564,6 +602,8 @@ class Dokkaebi(object):
 			"reply_to_message_id": None, #optional - integer optional message id if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
 		}
+
+		RETURNS: sent Message json object
 
 		PRECONDITION:
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
@@ -595,6 +635,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -607,6 +649,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: UserProfilePhotos json object
 		
 		PRECONDITION:
 
@@ -619,6 +663,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: File json object
 		
 		PRECONDITION:
 
@@ -631,6 +677,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -643,6 +691,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -655,6 +705,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -667,6 +719,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -679,6 +733,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -691,6 +747,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -703,6 +761,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: new link as a string
 		
 		PRECONDITION:
 
@@ -715,6 +775,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -727,6 +789,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -739,6 +803,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -751,6 +817,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -763,6 +831,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -775,6 +845,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -787,6 +859,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: boolean
 		
 		PRECONDITION:
 
@@ -799,6 +873,8 @@ class Dokkaebi(object):
 		{
 	
 		}
+
+		RETURNS: Chat json object
 		
 		PRECONDITION:
 
@@ -807,32 +883,86 @@ class Dokkaebi(object):
 
 	def getChatAdministrators(self):
 		"""
-		STUB
+		Get a list of administrators in a chat (see Telegram API doc).
+		{
+	
+		}
+
+		RETURNS: array of ChatMember json object
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def getChatMembersCount(self):
 		"""
-		STUB
+		Get the number of members in a chat (see Telegram API doc).
+		{
+	
+		}
+
+		RETURNS: integer
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def getChatMember(self):
 		"""
-		STUB
+		Get information about a chat member (see Telegram API doc).
+		{
+	
+		}
+
+		RETURNS: ChatMember json object
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def setChatStickerSet(self):
 		"""
-		STUB
+		Set a new group sticker set in a chat - bot must be an administrator (see Telegram API doc).
+		{
+	
+		}
+
+		RETURNS: boolean
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def deleteChatStickerSet(self):
 		"""
-		STUB
+		Remove group sticker set from a chat - bot must be an administrator (see Telegram API doc).
+		{
+	
+		}
+
+		RETURNS: boolean
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def answerCallbackQuery(self):
 		"""
-		STUB
+		Send answers to callback queries sent from inline keyboards (see Telegram API doc).
+		{
+	
+		}
+
+		RETURNS: boolean
+		
+		PRECONDITION:
+
+		POSTCONDITION:
 		"""
 
 	def setMyCommands(self, commands):
@@ -850,6 +980,8 @@ class Dokkaebi(object):
 				...
 			]
 		}
+
+		RETURNS: boolean
 
 		#sets the list with valid commands:
 		self.setMyCommands(commands)
@@ -881,6 +1013,8 @@ class Dokkaebi(object):
 		Gets the current command list for your bot programatically
 		rather than through the Bot Father. Returns a json object
 		from the Telegram API.
+
+		RETURNS: array of BotCommand json object
 
 		PRECONDITION:
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
