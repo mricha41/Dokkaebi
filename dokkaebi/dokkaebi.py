@@ -134,7 +134,7 @@ class Dokkaebi(object):
 
 		POSTCONDITION:
 		self.webhook_config["url"] is set, the request is made, and one of the following takes place:
-			* request status code 200 is returned indicating the request was successful and
+			* request status code 200 received and True is returned indicating the request was successful and
 			  the webhook is set on Telegram
 			* request status code returned indicates one of the following types of errors:
 				* internal server error
@@ -172,9 +172,8 @@ class Dokkaebi(object):
 		
 		POSTCONDITION:
 		Dokkaebi sends the request to get the webhook information from Telegram. Upon success,
-		a json object is printed to the console and the jsont is
-		returned to the caller (see Python requests	documentation for more 
-		information on what is returned from requests.get(...)). In the event of an error,
+		a json object is printed to the console and the WebhookInfo json object is
+		returned to the caller In the event of an error,
 		the request object is returned after error is printed to the console. Also, see the
 		Telegram Bot API documentation for what types of status codes to expect
 		when making a request to /getWebhookInfo.
@@ -206,7 +205,7 @@ class Dokkaebi(object):
 		POSTCONDITION:
 		Dokkaebi sends the request to get remove the webhook from Telegram and the internal
 		Dokkaebi bot webhook data is reset to None. Upon success, the HTTP status code
-		is printed to the console. Upon error, the status code is printed to the console
+		is printed to the console and the request returns True. Upon error, the status code is printed to the console
 		along with the whole request object returned. (see Python requests documentation for more 
 		information on what status codes could be returned from requests.post(...)). Also, see the
 		Telegram Bot API documentation for what types of status codes to expect
@@ -233,7 +232,7 @@ class Dokkaebi(object):
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 		
 		POSTCONDITION:
-		If the request succeeds, a JSON object with the bot info will be returned.
+		If the request succeeds, a User json object with the bot info will be returned.
 		Otherwise, the request failed with an error and the request object is printed
 		to the console and returned. Also, see the Telegram Bot API documentation for 
 		what types of status codes to expect when making a request to /getMe.
@@ -270,7 +269,7 @@ class Dokkaebi(object):
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
-		On success, Telegram receives the message. 
+		On success, Telegram receives the message and the Message json object is returned. 
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
@@ -280,7 +279,7 @@ class Dokkaebi(object):
 		if(r.status_code == 200):
 			print("Message sent...")
 		else:
-			print("Message could not be set - error: " + format(r.status_code))
+			print("Message could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 		
@@ -290,17 +289,23 @@ class Dokkaebi(object):
 		"""
 		Forward a message to Telegram.
 		{
-			"chat_id": CHATID, #required - string or integer according to Telegram API docs
-			"from_chat_id": FROMCHATID,
-			"message_id": MESSAGEID,
-			"disable_notification": None
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"from_chat_id": FROMCHATID, #required - string or integer for the chat where the original message is from.
+			"message_id": MESSAGEID, #required - integer id of the message being forwarded.
+			"disable_notification": None, #optional - disable notification sound to send photo to user silently.
 		}
 
 		RETURNS: sent Message json object
 
 		PRECONDITION:
+		A Telegram bot has been created, the Dokkaebi instance has been constructed, and a
+		message exists to forward.
 
 		POSTCONDITION:
+		On success, Telegram receives the forwarded message and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/forwardMessage'
 		r = requests.post(url, data = message_data)
@@ -308,7 +313,7 @@ class Dokkaebi(object):
 		if(r.status_code == 200):
 			print("Message sent...")
 		else:
-			print("Message could not be set - error: " + format(r.status_code))
+			print("Message could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
@@ -322,7 +327,7 @@ class Dokkaebi(object):
 			"photo": FILEORURL, #required - input file, file_id as string or url to photo as string (see Telegram API doc).
 			"caption": "CAPTION", #optional - description of the photo.
 			"parse_mode": None, #optional - html or markdown (see Telegram API doc).
-			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"disable_notification": None, #optional - disable notification sound to send photo to user silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
@@ -330,8 +335,13 @@ class Dokkaebi(object):
 		RETURNS: sent Message json object
 
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the photo request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendPhoto'
 		r = requests.post(url, data = photo_data)
@@ -339,7 +349,7 @@ class Dokkaebi(object):
 		if(r.status_code == 200):
 			print("Photo sent...")
 		else:
-			print("Photo could not be set - error: " + format(r.status_code))
+			print("Photo could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
@@ -351,13 +361,13 @@ class Dokkaebi(object):
 		{
 			"chat_id": CHATID, #required - string or integer according to Telegram API docs
 			"audio": FILEORURL, #required - input file, file_id as string or url to audio file as string (see Telegram API doc).
-			"caption": "CAPTION", #optional - string description of the photo.
+			"caption": "CAPTION", #optional - string description of the audio.
 			"parse_mode": None, #optional - string html or markdown (see Telegram API doc).
 			"duration": None, #optional - int duration in seconds.
 			"performer": None, #optional - string performer name.
 			"title": None, #optional - string title of audio.
 			"thumb": None, #optional - input file or string (see Telegram API doc) 
-			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"disable_notification": None, #optional - disable notification sound to send audio to user silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
@@ -365,8 +375,13 @@ class Dokkaebi(object):
 		RETURNS: sent Message json object
 
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the audio request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio'
 		r = requests.post(url, data = audio_data)
@@ -374,7 +389,7 @@ class Dokkaebi(object):
 		if(r.status_code == 200):
 			print("Audio sent...")
 		else:
-			print("Audio could not be set - error: " + format(r.status_code))
+			print("Audio could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
@@ -389,7 +404,7 @@ class Dokkaebi(object):
 			"thumb": None, #optional - input file or string (see Telegram API doc)
 			"caption": "CAPTION", #optional - string description of the document.
 			"parse_mode": None, #optional - string html or markdown (see Telegram API doc).
-			"disable_notification": None, #optional disable notification sound to send document to user silently.
+			"disable_notification": None, #optional - disable notification sound to send document to user silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
@@ -397,8 +412,13 @@ class Dokkaebi(object):
 		RETURNS: sent Message json object
 
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the document request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDocument'
 		r = requests.post(url, data = document_data)
@@ -406,7 +426,7 @@ class Dokkaebi(object):
 		if(r.status_code == 200):
 			print("Document sent...")
 		else:
-			print("Document could not be set - error: " + format(r.status_code))
+			print("Document could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
@@ -425,7 +445,7 @@ class Dokkaebi(object):
 			"caption": "CAPTION", #optional - string description of the video.
 			"parse_mode": None, #optional - string html or markdown for video caption (see Telegram API doc).
 			"supports_streaming": None, #optional - True if video can be streamed.			 
-			"disable_notification": None, #optional disable notification sound to send photo to user silently.
+			"disable_notification": None, #optional - disable notification sound to send video to user silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
@@ -433,8 +453,13 @@ class Dokkaebi(object):
 		RETURNS: sent Message json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the video request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideo'
 		r = requests.post(url, data = video_data)
@@ -442,106 +467,233 @@ class Dokkaebi(object):
 		if(r.status_code == 200):
 			print("Video sent...")
 		else:
-			print("Video could not be set - error: " + format(r.status_code))
+			print("Video could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
 		return r
 	
-	def sendAnimation(self):
+	def sendAnimation(self, animation_data):
 		"""
 		Send an animation to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"animation": "FILE", #required - InputFile or string according to Telegram API docs.
+			"duration": None, #optional - int duration in seconds.
+			"width": None, #optional - int width of animation.
+			"height": None, #optional - int height of animation.
+			"thumb": None, #optional - input file or string (see Telegram API doc).
+			"caption": "CAPTION", #optional - string description of the animation.
+			"parse_mode": None, #optional - string html or markdown for animation caption (see Telegram API doc).
+			"disable_notification": None, #optional - disable notification sound to send animation to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
 		RETURNS: sent Message json object
 
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the animation request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAnimation'
+		r = requests.post(url, data = animation_data)
 
-	def sendVoice(self):
+		if(r.status_code == 200):
+			print("Animation sent...")
+		else:
+			print("Animation could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+	def sendVoice(self, voice_data):
 		"""
 		Send a voice message to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"voice": "FILE", #required - InputFile or string according to Telegram API docs.
+			"caption": "CAPTION", #optional - string description of the voice.
+			"parse_mode": None, #optional - string html or markdown for voice caption (see Telegram API doc).
+			"duration": None, #optional - int duration in seconds.
+			"disable_notification": None, #optional - disable notification sound to send voice to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
 		RETURNS: sent Message json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the voice request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVoice'
+		r = requests.post(url, data = voice_data)
 
-	def sendVideoNote(self):
+		if(r.status_code == 200):
+			print("Voice sent...")
+		else:
+			print("Voice could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+	def sendVideoNote(self, video_note_data):
 		"""
 		Send a video note to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"video_note": "FILE", #required - InputFile or string according to Telegram API docs.
+			"duration": None, #optional - int duration in seconds.
+			"length": None, #optional - int diameter of video note according to Telegram API docs.
+			"thumb": None, #optional - input file or string (see Telegram API doc)
+			"disable_notification": None, #optional - disable notification sound to send video note to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
 		RETURNS: sent Message json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the video note request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideoNote'
+		r = requests.post(url, data = video_note_data)
 
-	def sendMediaGroup(self):
+		if(r.status_code == 200):
+			print("Video note sent...")
+		else:
+			print("Video note could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+	def sendMediaGroup(self, media_group_data):
 		"""
 		Send a group of photos or videos as an album to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"media": [
+				{"type": "photo", "media": "URLTOPHOTO"},
+				{"type": "photo", "media": "URLTOPHOTO"},
+				...
+			, # required - json-serialized array of InputMediaPhoto or InputMediaVideo (2-10 items).
+			"disable_notification": None, #optional - disable notification sound to send media group to user silently.
+			"reply_to_message_id": None #optional - optional id of the original message if the message is a reply.
 		}
 
 		RETURNS: array of sent Message json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the media group request and the array of Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendMediaGroup'
+		r = requests.post(url, json = media_group_data)
 
-	def sendLocation(self):
+		if(r.status_code == 200):
+			print("Media group sent...")
+		else:
+			print("Media group could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+	def sendLocation(self, location_data):
 		"""
 		Send a location to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"latitude": LAT, #required - float latitude of location.
+			"longitude": LONG, #required - float longitude of location.
+			"live_period": , #optional - period in seconds for which the location will be updated (60-86400 seconds).
+			"disable_notification": None, #optional - disable notification sound to send location to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 		
+		RETURNS: sent Message json object
+		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the location request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendLocation'
+		r = requests.post(url, data = location_data)
+
+		if(r.status_code == 200):
+			print("Location sent...")
+		else:
+			print("Location could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
 	def editMessageLiveLocation(self):
 		"""
 		Edit a live location message.
 		{
-	
+			"chat_id": CHATID, #optional - string or integer according to Telegram API docs. (required if inline_message_id is not specified)
+			"message_id": MESSAGEID, #optional - integer id of the live location message being edited. (required if inline_message_id is not specified)
+			"inline_message_id": MESSAGEID, # optional - integer id of inline message (required if chat_id and message_id are not specified)
+			"latitude": LAT, #required - float latitude of location.
+			"longitude": LONG, #required - float longitude of location.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
 		RETURNS: if bot owned the message a sent Message json object is returned, otherwise True is returned
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the edit live location request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 
 	def stopMessageLiveLocation(self):
 		"""
 		Stop a live location message.
 		{
-	
+			"chat_id": CHATID, #optional - string or integer according to Telegram API docs. (required if inline_message_id is not specified)
+			"message_id": MESSAGEID, #optional - integer id of the live location message being edited. (required if inline_message_id is not specified)
+			"inline_message_id": MESSAGEID, # optional - integer id of inline message (required if chat_id and message_id are not specified)
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
 		RETURNS: if bot owned the message a sent Message json object is returned, otherwise True is returned
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the stop live location request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
 
 	def sendVenue(self):
