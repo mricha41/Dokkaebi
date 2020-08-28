@@ -12,12 +12,6 @@ class Dokkaebi(object):
 	self.webhook_config - user-supplied dictionary with hook information (see __init__).
 	self.webhook_info - json data with information about your webhook from the Telegram API.
 	self.update_received_count - number of updates received counted since the bot was instantiated.
-
-	self.message_info - json data with information about the current message received from a Telegram update.
-	self.chat_info - json data with information about the current chat received from a Telegram update.
-	self.message_from_info - json data with information about the user the Telegram update provides inside the message.
-	self.message_date - json data with the current message's date.
-	self.message_text - json data with the current message's text.
 	"""
 
 	def __init__(self, hook):
@@ -56,10 +50,12 @@ class Dokkaebi(object):
 		#before the server starts
 		self.onInit()
 
+		print("running cherrypy version: " + cherrypy.__version__)
+
 		#crank up a CherryPy server
 		cherrypy.config.update({
-		    'environment': 'production',
-		    'log.screen': False,
+		    #'environment': 'production',
+		    #'log.screen': False,
 		    'server.socket_host': self.webhook_config["hostname"],
 		    'server.socket_port': self.webhook_config["port"],
 		})
@@ -95,15 +91,6 @@ class Dokkaebi(object):
 		"""
 		data = cherrypy.request.json
 
-		#store some for the convenience of calling
-		#methods such as sendMessage(...) without
-		#user having to mess with housekeeping data
-		self.message_info = data["message"]
-		self.chat_info = data["message"]["chat"]
-		self.message_from_info = data["message"]["from"]
-		self.message_date = data["message"]["date"]
-		self.message_text = data["message"]["text"]
-		
 		#callback to a user-defined function
 		#for handling updates
 		self.handleData(data)
@@ -510,6 +497,8 @@ class Dokkaebi(object):
 			print("Animation could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
+				
+		return r
 
 	def sendVoice(self, voice_data):
 		"""
@@ -545,6 +534,8 @@ class Dokkaebi(object):
 			print("Voice could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
+				
+		return r
 
 	def sendVideoNote(self, video_note_data):
 		"""
@@ -580,6 +571,8 @@ class Dokkaebi(object):
 			print("Video note could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
+				
+		return r
 
 	def sendMediaGroup(self, media_group_data):
 		"""
@@ -615,6 +608,8 @@ class Dokkaebi(object):
 			print("Media group could not be sent - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
+				
+		return r
 
 	def sendLocation(self, location_data):
 		"""
@@ -650,7 +645,9 @@ class Dokkaebi(object):
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
 
-	def editMessageLiveLocation(self):
+		return r
+
+	def editMessageLiveLocation(self, location_data):
 		"""
 		Edit a live location message.
 		{
@@ -673,8 +670,19 @@ class Dokkaebi(object):
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/editMessageLiveLocation'
+		r = requests.post(url, data = location_data)
 
-	def stopMessageLiveLocation(self):
+		if(r.status_code == 200):
+			print("Location edit sent...")
+		else:
+			print("Location edit could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def stopMessageLiveLocation(self, location_data):
 		"""
 		Stop a live location message.
 		{
@@ -695,6 +703,17 @@ class Dokkaebi(object):
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/stopMessageLiveLocation'
+		r = requests.post(url, data = location_data)
+
+		if(r.status_code == 200):
+			print("Live location stopped...")
+		else:
+			print("Live location stop could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 
 	def sendVenue(self):
 		"""
@@ -737,16 +756,9 @@ class Dokkaebi(object):
 		POSTCONDITION:
 		"""
 
-	def sendDice(self, dice_data = None):
+	def sendDice(self, dice_data):
 		"""
 		Send dice to the Telegram user.
-		Does not require parameters because Dokkaebi
-		keeps track of the chat id internally and sends
-		the dice to the corresponding chat automatically.
-		Dokkaebi keeps track of the current chat id internally, but
-		it can also be overridden at your option.
-		Override the default dice_data parameter to a dictionary of the following form
-		(only chat_id parameter is required):
 		{ 
 			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
 			"emoji": None, #optional - accepts a string with unicode value or copy/paste literal emoji (probably works).
@@ -767,10 +779,7 @@ class Dokkaebi(object):
 		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDice'
-		if dice_data is not None:
-			r = requests.post(url, data = dice_data)
-		else:
-			r = requests.post(url, data = {"chat_id": self.chat_info["id"]})
+		r = requests.post(url, data = dice_data)
 
 		if(r.status_code == 200):
 			print("Dice sent...")
