@@ -23,6 +23,7 @@ bot_commands = {
 
 class Bot(dokkaebi.Dokkaebi):
 	def handleData(self, data):
+		#print(data)
 		if "message" in data:
 			if "text" in data["message"]:
 				command = data["message"]["text"]
@@ -145,6 +146,18 @@ class Bot(dokkaebi.Dokkaebi):
 					"is_closed": True
 				}
 				self.sendPoll(poll)
+			elif command in ["/action", "/action@" + self.bot_info["username"]]:
+				self.sendChatAction({
+					"chat_id": chat_id,
+					"action": "typing"
+				})
+			elif command in ["/userphotos", "/userphotos@" + self.bot_info["username"]]:
+				#returns json info to console, it's up to you
+				#what you do with the info once it's returned
+				#(set profile photo, set chat photo, etc.)
+				print(self.getUserProfilePhotos({
+					"user_id": self.bot_info["id"]
+				}).json())
 			else:
 				msg = {
 					"chat_id": chat_id,

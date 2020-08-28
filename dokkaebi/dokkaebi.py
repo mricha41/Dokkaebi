@@ -866,33 +866,73 @@ class Dokkaebi(object):
 		
 		return r
 
-	def sendChatAction(self):
+	def sendChatAction(self, action_data):
 		"""
 		Send a chat action (indication that something is happening on the bot side) to Telegram.
-		{
-	
+		{ 
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"action": "ACTION" 
+			#required - Type of action to broadcast. 
+			#Choose one, depending on what the user is about to receive: 
+			#typing for text messages, upload_photo for photos, record_video or upload_video for videos, 
+			#record_audio or upload_audio for audio files, upload_document for general files, find_location for location data, 
+			#record_video_note or upload_video_note for video notes.
 		}
 
-		RETURNS: boolean
-		
+		RETURNS: True on success
+
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The chat action has been sent to the Telegram user and the request object is returned
+		to the caller to process at their option.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendChatAction'
+		r = requests.post(url, data = action_data)
 
-	def getUserProfilePhotos(self):
+		if(r.status_code == 200):
+			print("Chat action sent...")
+		else:
+			print("Chat action could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+		
+		return r
+
+	def getUserProfilePhotos(self, profile_data):
 		"""
 		Get a list of profile photos from a Telegram user.
-		{
-	
+		{ 
+			"user_id": USERCHATID, #required - integer according to Telegram API docs.
+			"offset": None, #optional - integer sequential number of the first photo to be returned. All photos are returned by default.
+			"limit": None #optional - integer number of photos to limit the results to (1-100 photos).
 		}
 
 		RETURNS: UserProfilePhotos json object
-		
+
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The profile photo request has been sent to the Telegram and user profile photos request object is returned
+		to the caller to process at their option.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getUserProfilePhotos'
+		r = requests.get(url, data = profile_data)
+
+		if(r.status_code == 200):
+			print("Profile photos received...")
+		else:
+			print("Profile photos could not be retrieved - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+		
+		return r
 
 	def getFile(self):
 		"""
