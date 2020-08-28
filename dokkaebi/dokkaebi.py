@@ -715,46 +715,122 @@ class Dokkaebi(object):
 
 		return r
 
-	def sendVenue(self):
+	def sendVenue(self, venue_data):
 		"""
 		Send a venue to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"latitude": LAT, #required - float latitude of venue.
+			"longitude": LONG, #required - float longitude of venue.
+			"title": "TITLE", #required - string title of the venue.
+			"address": "ADDRESS", #required - string address of the venue.
+			"foursquare_id": None, #optional - string foursquare id (see Telegram API doc).
+			"foursquare_type": None, #optional - string foursquare type (see Telegram API doc).
+			"disable_notification": None, #optional - disable notification sound to send venue to Telegram silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
-
+		
 		RETURNS: sent Message json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the venue request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
-	def sendContact(self):
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVenue'
+		r = requests.post(url, data = venue_data)
+
+		if(r.status_code == 200):
+			print("Venue sent...")
+		else:
+			print("Venue could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+	def sendContact(self, contact_data):
 		"""
 		Send a contact to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"phone_number": "PHONENUMBER", #required - string contact's phone number.
+			"first_name": "FIRSTNAME", #required - string contact's first name.
+			"last_name": None, #optional - string contact's last name.
+			"vcard": None, #optional - string contact's vcard.
+			"disable_notification": None, #optional - disable notification sound to send contact to user silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
-
+		
 		RETURNS: sent Message json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the contact request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendContact'
+		r = requests.post(url, data = contact_data)
 
-	def sendPoll(self):
+		if(r.status_code == 200):
+			print("Contact sent...")
+		else:
+			print("Contact could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def sendPoll(self, poll_data):
 		"""
-		Send a poll to Telegram.
+		Send a venue to Telegram.
 		{
-	
+			"chat_id": CHATID, #required - string or integer according to Telegram API docs.
+			"question": "YOUR QUESTION", #required - string poll question.
+			"options": ["OPTION1", "OPTION2", ...], #required - array of string poll options.
+			"is_anonymous": True, #optional - defaults to True, set to False if anonymity is not desirable.
+			"type": "regular", #optional - defaults to "regular", set to "quiz" if desired.
+			"allows_multiple_answers": False, #optional - defaults to False (ignored in "quiz" mode), set True if desired.
+			"correct_option_id": None, #optional - integer 0-based index into options given, required for "quiz" mode, otherwise set if desired.
+			"explanation": None, #optional - string explanation for correct answer if desired.
+			"explanation_parse_mode": None, #optional - html or markdown if desired (see Telegram API doc).
+			"open_period": None, #optional - integer time in seconds the poll is open (5-600 seconds, cannot be used with close_date).
+			"close_date": None, #optional - integer date as a Unix timestamp when the poll should close (5-600 seconds after poll started, cannot be used with open_period).
+			"is_closed": None, #optional - boolean pass in True to immediately end a poll, which could be useful in testing it.
+			"disable_notification": None, #optional - disable notification sound to send venue to Telegram silently.
+			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
+			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
-
+		
 		RETURNS: sent Message json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		On success, Telegram receives the poll request and the Message json object
+		is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendPoll'
+		r = requests.post(url, json = poll_data)
+
+		if(r.status_code == 200):
+			print("Poll sent...")
+		else:
+			print("Poll could not be sent - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
 	def sendDice(self, dice_data):
 		"""
