@@ -176,9 +176,9 @@ class Bot(dokkaebi.Dokkaebi):
 			elif command in ["/getchat", "/getchat@" + self.bot_info["username"]]:
 				print(self.getChat({"chat_id": chat_id}).json())
 			elif command in ["/kick", "/kick@" + self.bot_info["username"]]:
-				print(self.kickChatMember({"chat_id": chat_id, "user_id": 910800823}))
+				print(self.kickChatMember({"chat_id": chat_id, "user_id": None})) #provide your own id
 			elif command in ["/unkick", "/unkick@" + self.bot_info["username"]]:
-				print(self.unbanChatMember({"chat_id": chat_id, "user_id": 910800823}))
+				print(self.unbanChatMember({"chat_id": chat_id, "user_id": None})) #provide your own id
 			else:
 				msg = {
 					"chat_id": chat_id,
