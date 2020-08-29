@@ -871,8 +871,7 @@ class Dokkaebi(object):
 		Send a chat action (indication that something is happening on the bot side) to Telegram.
 		{ 
 			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
-			"action": "ACTION" 
-			#required - Type of action to broadcast. 
+			"action": "ACTION"	#required - Type of action to broadcast. 
 			#Choose one, depending on what the user is about to receive: 
 			#typing for text messages, upload_photo for photos, record_video or upload_video for videos, 
 			#record_audio or upload_audio for audio files, upload_document for general files, find_location for location data, 
@@ -917,7 +916,7 @@ class Dokkaebi(object):
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
-		The profile photo request has been sent to the Telegram and user profile photos request object is returned
+		The profile photo request has been sent to the Telegram and UserProfilePhotos json object is returned
 		to the caller to process at their option.
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
@@ -934,47 +933,101 @@ class Dokkaebi(object):
 		
 		return r
 
-	def getFile(self):
+	def getFile(self, file_data):
 		"""
-		Get information about a file and prepare it for downloading (see Telegram API doc).
+		Get information about a file and prepare it for downloading. This function may
+		not behave like you expect it to, so it is strongly suggested to review the
+		Telegram API documentation before using this.
 		{
-	
+			"file_id": FILEID #required - int unique identifier for the file.
 		}
 
 		RETURNS: File json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The file request has been sent to the Telegram and a File json object is returned
+		to the caller to process at their option.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getFile'
+		r = requests.get(url, data = file_data)
 
-	def kickChatMember(self):
+		if(r.status_code == 200):
+			print("File received...")
+		else:
+			print("File could not be retrieved - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+		
+		return r
+
+	def kickChatMember(self, user_data):
 		"""
 		Remove a Telegram user from a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"user_id": USERID, #required - int unique id of user.
+			"until_date": DATE #optional - int Unix timestamp.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The kick chat member request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/kickChatMember'
+		r = requests.post(url, data = user_data)
 
-	def unbanChatMember(self):
+		if(r.status_code == 200):
+			print("Member kicked from chat...")
+		else:
+			print("Member could not be kicked - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+		
+		return r
+
+	def unbanChatMember(self, user_data):
 		"""
 		Unban a previously kicked Telegram user from a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"user_id": USERID, #required - int unique id of user.
+			"until_date": DATE #optional - int Unix timestamp.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The unban chat member request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/unbanChatMember'
+		r = requests.post(url, data = user_data)
+
+		if(r.status_code == 200):
+			print("Member unbanned from chat...")
+		else:
+			print("Member could not be unbanned - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 
 	def restrictChatMember(self):
 		"""
@@ -1144,7 +1197,7 @@ class Dokkaebi(object):
 		POSTCONDITION:
 		"""
 
-	def getChat(self):
+	def getChat(self, chat_data):
 		"""
 		Get information about a chat - returns a Chat json object (see Telegram API doc).
 		{
@@ -1154,9 +1207,26 @@ class Dokkaebi(object):
 		RETURNS: Chat json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The get chat request has been sent to the Telegram and a Chat json object is returned
+		to the caller to process at their option.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getChat'
+		r = requests.get(url, data = chat_data)
+
+		if(r.status_code == 200):
+			print("Chat data received...")
+		else:
+			print("Chat data could not be retrieved - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+		
+		return r
+
 
 	def getChatAdministrators(self):
 		"""

@@ -38,7 +38,7 @@ class Bot(dokkaebi.Dokkaebi):
 					"chat_id": chat_id,
 					"text": "Thanks for using "  + self.bot_info["username"] + ", " + user_first_name + "!"
 				}
-				self.sendMessage(msg)
+				print(self.sendMessage(msg).json())
 			elif command in ["/roll", "/roll@" + self.bot_info["username"]]:
 				self.sendDice({"chat_id": chat_id})
 			elif command in ["/cat", "/cat@" + self.bot_info["username"]]:
@@ -158,6 +158,27 @@ class Bot(dokkaebi.Dokkaebi):
 				print(self.getUserProfilePhotos({
 					"user_id": self.bot_info["id"]
 				}).json())
+			elif command in ["/getfile", "/getfile@" + self.bot_info["username"]]:
+				#grab the file id for the first profile photo set for the bot
+				file_id = self.getUserProfilePhotos({"user_id": self.bot_info["id"]}).json()["result"]["photos"][0][0]["file_id"]
+				#print(file_id)
+				#use get file to get the file by file_id...
+				file = self.getFile({
+					"file_id": file_id
+				}).json()
+
+				#use the File json object in some kind of
+				#"useful" way :D
+				self.sendPhoto({
+					"chat_id": chat_id,
+					"photo": file["result"]["file_id"]
+				})
+			elif command in ["/getchat", "/getchat@" + self.bot_info["username"]]:
+				print(self.getChat({"chat_id": chat_id}).json())
+			elif command in ["/kick", "/kick@" + self.bot_info["username"]]:
+				print(self.kickChatMember({"chat_id": chat_id, "user_id": 910800823}))
+			elif command in ["/unkick", "/unkick@" + self.bot_info["username"]]:
+				print(self.unbanChatMember({"chat_id": chat_id, "user_id": 910800823}))
 			else:
 				msg = {
 					"chat_id": chat_id,
