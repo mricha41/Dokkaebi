@@ -242,6 +242,44 @@ class Bot(dokkaebi.Dokkaebi):
 						"can_pin_messages":	False,
 					}
 				}).json())
+			elif command in ["/chatlink", "/chatlink@" + self.bot_info["username"]]:
+				#export the chat link...
+				link = self.exportChatInviteLink({
+					"chat_id": chat_id 
+				}).json()
+				#do something useful with it, like send it to
+				#chat members!
+				self.sendMessage({"chat_id": chat_id, "text": link["result"]})
+			elif command in ["/setchatphoto", "/setchatphoto@" + self.bot_info["username"]]:
+				#this doesn't work, unfortunately...
+				#print(self.setChatPhoto({"chat_id": chat_id, "photo": "https://i.ytimg.com/vi/Cw3cZiyeJOA/hqdefault.jpg"}).json())
+				
+				#what needs to happen is to upload a file opened locally
+				#and send it to Telegram...
+				cat = "uploadables/small_face_cat.jpg"
+				print(self.setChatPhoto({"chat_id": chat_id}, {"photo": open(cat, "rb")}).json())
+			elif command in ["/deletechatphoto", "/deletechatphoto@" + self.bot_info["username"]]:
+				print(self.deleteChatPhoto({"chat_id": chat_id}).json())
+			elif command in ["/chattitle", "/chattitle@" + self.bot_info["username"]]:
+				print(self.setChatTitle({"chat_id": chat_id, "title": "Bot Testing Sandbox"}).json())
+			elif command in ["/chatdesc", "/chatdesce@" + self.bot_info["username"]]:
+				print(self.setChatDescription({"chat_id": chat_id, "description": "tom-foolery"}).json())
+			elif command in ["/leave", "/leave@" + self.bot_info["username"]]:
+				print(self.leaveChat({"chat_id": chat_id}).json())
+			elif command in ["/getchat", "/getchat@" + self.bot_info["username"]]:
+				print(self.getChat({"chat_id": chat_id}).json())
+			elif command in ["/pin", "/pin@" + self.bot_info["username"]]:
+				print(self.pinChatMessage({"chat_id": chat_id, "message_id": 692}).json())
+			elif command in ["/unpin", "/unpin@" + self.bot_info["username"]]:
+				print(self.unpinChatMessage({"chat_id": chat_id}).json())
+			elif command in ["/admins", "/admins@" + self.bot_info["username"]]:
+				print(self.getChatAdministrators({"chat_id": chat_id}).json())
+			elif command in ["/count", "/count@" + self.bot_info["username"]]:
+				count = self.getChatMembersCount({"chat_id": chat_id}).json()
+				print(count)
+				self.sendMessage({"chat_id": chat_id, "text": "Members in chat: {}".format(count["result"])})
+			elif command in ["/getmember", "/getmember@" + self.bot_info["username"]]:
+				print(self.getChatMember({"chat_id": chat_id, "user_id": self.bot_info["id"]}).json())
 			else:
 				msg = {
 					"chat_id": chat_id,

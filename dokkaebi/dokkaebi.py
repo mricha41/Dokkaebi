@@ -1073,7 +1073,7 @@ class Dokkaebi(object):
 
 	def promoteChatMember(self, user_data):
 		"""
-		Promote or demote a Telegram user in a chat (see Telegram API doc).
+		Promote a Telegram user in a chat (see Telegram API doc).
 		{
 			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
 			"user_id": USERID, #required - int unique id of user.
@@ -1182,123 +1182,256 @@ class Dokkaebi(object):
 
 		return r
 
-	def exportChatInviteLink(self):
+	def exportChatInviteLink(self, chat_data):
 		"""
 		Generate a new invite link for a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
 		}
 
-		RETURNS: new link as a string
+		RETURNS: string
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The export chat invite link request has been sent to the Telegram and the string is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/exportChatInviteLink'
+		r = requests.get(url, data = chat_data)
 
-	def setChatPhoto(self):
+		if(r.status_code == 200):
+			print("Chat invite link exported...")
+		else:
+			print("Chat invite link could not be exported - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def setChatPhoto(self, photo_data, photo_file):
 		"""
 		Set the profile photo for the chat - does not work for private chats (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"photo": YOURPHOTO #required - InputFile object according to Telegram API docs.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The set chat photo request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setChatPhoto?chat_id={}'.format(photo_data["chat_id"])
+		r = requests.post(url, files = photo_file)
+		
+		if(r.status_code == 200):
+			print("Chat photo set...")
+		else:
+			print("Chat photo could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def deleteChatPhoto(self):
+		return r
+
+	def deleteChatPhoto(self, chat_data):
 		"""
 		Delete the profile photo for the chat - does not work for private chats (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID #required - string or integer according to Telegram API docs.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The delete chat photo request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/deleteChatPhoto'
+		r = requests.post(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat photo deleted...")
+		else:
+			print("Chat photo could not be deleted - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def setChatTitle(self):
+		return r
+
+	def setChatTitle(self, chat_data):
 		"""
 		Set the title of the chat - does not work for private chats (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"title": "TITLE" #required - string title you want to set for the chat.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The set chat title request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setChatTitle'
+		r = requests.post(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat title set...")
+		else:
+			print("Chat title could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def setChatDescription(self):
+		return r
+
+	def setChatDescription(self, chat_data):
 		"""
 		Set the description of the chat - bot must be an administrator (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"description": "DESCRIPTION" #required - string description you want to set for the chat.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The set chat description request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setChatDescription'
+		r = requests.post(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat description set...")
+		else:
+			print("Chat description could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def pinChatMessage(self):
+		return r
+
+	def pinChatMessage(self, chat_data):
 		"""
 		Pin a message in a chat - bot must be an administrator (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"message_id": MESSAGEID, #required - integer id of the live location message being edited. (required if inline_message_id is not specified)
+			"disable_notification": None #optional - boolean disables notification sound and sends dice silently.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The pin chat message request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/pinChatMessage'
+		r = requests.post(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat message pinned...")
+		else:
+			print("Chat message could not be pinned - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def unpinChatMessage(self):
+		return r
+
+	def unpinChatMessage(self, chat_data):
 		"""
 		Unpin a message in a chat - bot must be an administrator (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID #required - string or integer according to Telegram API docs.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The unpin chat message request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/unpinChatMessage'
+		r = requests.post(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat message unpinned...")
+		else:
+			print("Chat message could not be unpinned - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def leaveChat(self):
+		return r
+
+	def leaveChat(self, chat_data):
 		"""
 		Make bot leave a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID #required - string or integer according to Telegram API docs.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The leave chat message request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/leaveChat'
+		r = requests.post(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Left the chat...")
+		else:
+			print("Could not leave the chat - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 
 	def getChat(self, chat_data):
 		"""
 		Get information about a chat - returns a Chat json object (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID #required - string or integer according to Telegram API docs.
 		}
 
 		RETURNS: Chat json object
@@ -1324,48 +1457,96 @@ class Dokkaebi(object):
 		
 		return r
 
-
-	def getChatAdministrators(self):
+	def getChatAdministrators(self, chat_data):
 		"""
 		Get a list of administrators in a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID #required - string or integer according to Telegram API docs.
 		}
 
-		RETURNS: array of ChatMember json object
+		RETURNS: array of ChatAdministrator json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The get chat administrators message request has been sent to the Telegram and the json is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getChatAdministrators'
+		r = requests.get(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat administrators retrieved...")
+		else:
+			print("Could not retrieve chat administrators - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def getChatMembersCount(self):
+		return r
+
+	def getChatMembersCount(self, chat_data):
 		"""
 		Get the number of members in a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID #required - string or integer according to Telegram API docs.
 		}
 
-		RETURNS: integer
+		RETURNS: int
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The get chat members message request has been sent to the Telegram and the json is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getChatMembersCount'
+		r = requests.get(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat member count retrieved...")
+		else:
+			print("Could not retrieve chat member count - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def getChatMember(self):
+		return r
+
+	def getChatMember(self, chat_data):
 		"""
 		Get information about a chat member (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"user_id": USERCHATID #required - integer according to Telegram API docs.
 		}
 
 		RETURNS: ChatMember json object
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The get chat members message request has been sent to the Telegram and the json is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getChatMember'
+		r = requests.get(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat member retrieved...")
+		else:
+			print("Could not retrieve chat member - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 
 	def setChatStickerSet(self):
 		"""
