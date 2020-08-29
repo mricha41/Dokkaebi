@@ -1548,33 +1548,66 @@ class Dokkaebi(object):
 
 		return r
 
-	def setChatStickerSet(self):
+	def setChatStickerSet(self, sticker_data):
 		"""
 		Set a new group sticker set in a chat - bot must be an administrator (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"sticker_set_name": "NAME" #required - string according to Telegram API docs.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The set chat sticker set message request has been sent to the Telegram and the json is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setChatStickerSet'
+		r = requests.post(url, data = sticker_data)
+		
+		if(r.status_code == 200):
+			print("Chat sticker set has been set...")
+		else:
+			print("Could not set chat sticker set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
 
-	def deleteChatStickerSet(self):
+		return r
+
+	def deleteChatStickerSet(self, chat_data):
 		"""
 		Remove group sticker set from a chat - bot must be an administrator (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID #required - string or integer according to Telegram API docs.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The set chat sticker set message request has been sent to the Telegram and the json is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/deleteChatStickerSet'
+		r = requests.post(url, data = chat_data)
+		
+		if(r.status_code == 200):
+			print("Chat sticker set has been deleted...")
+		else:
+			print("Could not delete chat sticker set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 
 	def answerCallbackQuery(self):
 		"""

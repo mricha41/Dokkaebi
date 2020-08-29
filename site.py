@@ -280,6 +280,12 @@ class Bot(dokkaebi.Dokkaebi):
 				self.sendMessage({"chat_id": chat_id, "text": "Members in chat: {}".format(count["result"])})
 			elif command in ["/getmember", "/getmember@" + self.bot_info["username"]]:
 				print(self.getChatMember({"chat_id": chat_id, "user_id": self.bot_info["id"]}).json())
+			elif command in ["/setstickers", "/setstickers@" + self.bot_info["username"]]:
+				#only works for supergroups - call anyway to see what the error shows
+				print(self.setChatStickerSet({"chat_id": chat_id, "sticker_set_name": "Holy Poop"}).json())
+			elif command in ["/deletestickers", "/deletestickers@" + self.bot_info["username"]]:
+				#only works for supergroups - call anyway to see what the error shows
+				print(self.deleteChatStickerSet({"chat_id": chat_id}).json())
 			else:
 				msg = {
 					"chat_id": chat_id,
