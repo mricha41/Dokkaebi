@@ -1029,61 +1029,158 @@ class Dokkaebi(object):
 
 		return r
 
-	def restrictChatMember(self):
+	def restrictChatMember(self, user_data):
 		"""
 		Restrict a Telegram user (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"user_id": USERID, #required - int unique id of user.
+			"permissions": {
+				"can_send_messages": None, #optional - boolean send text messages, contacts, locations and venues
+				"can_send_media_messages": None, #optional - boolean send audios, documents, photos, videos, video notes and voice notes
+				"can_send_polls": None, #optional - boolean send polls
+				"can_send_other_messages": None, #optional - boolean send animations, games, stickers and use inline bots
+				"can_add_web_page_previews": None, #optional - boolean add web page previews to their messages
+				"can_change_info" None, #optional - boolean change the chat title, photo and other settings
+				"can_invite_users" None, #optional - boolean invite new users to the chat
+				"can_pin_messages" None, #optional - boolean pin messages
+			}, #required - ChatPermissions object (see Telegram API doc).
+			"until_date": DATE #optional - int Unix timestamp.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The restrict chat member request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/restrictChatMember'
+		r = requests.post(url, data = user_data)
 
-	def promoteChatMember(self):
+		if(r.status_code == 200):
+			print("Member restrictions set...")
+		else:
+			print("Member could not be restricted - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def promoteChatMember(self, user_data):
 		"""
 		Promote or demote a Telegram user in a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"user_id": USERID, #required - int unique id of user.
+			"can_change_info": None, #optional - boolean true if admin can change chat info (title, photo, description, etc.).
+			"can_post_messages": None, #optional - boolean true if admin can post messages to the chat.
+			"can_edit_messages": None, #optional - boolean true if admin can edit messages in the chat.
+			"can_delete_messages": None, #optional - boolean true if admin can delete messages in the chat.
+			"can_invite_users": None, #optional - boolean true if admin can invite users to the chat.
+			"can_restrict_members": None, #optional - boolean true if admin can restrict members in the chat.
+			"can_pin_messages": None, #optional - boolean true if admin can pin messages in the chat.
+			"can_promote_members": None #optional - boolean true if admin can promote members in a chat.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The promote chat member request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/promoteChatMember'
+		r = requests.post(url, data = user_data)
 
-	def setChatAdministratorCustomTitle(self):
+		if(r.status_code == 200):
+			print("Member promoted...")
+		else:
+			print("Member could not be promoted - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def setChatAdministratorCustomTitle(self, user_data):
 		"""
 		Set a custom title for an administrator in a chat promoted by the bot (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"user_id": USERID, #required - int unique id of user.
+			"custom_title": "TITLE" #required - string custom title for the chat admin.
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The set chat administrator title request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setChatAdministratorCustomTitle'
+		r = requests.post(url, data = user_data)
 
-	def setChatPermissions(self):
+		if(r.status_code == 200):
+			print("Chat administrator custom title set...")
+		else:
+			print("Chat administrator custom title could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
+
+	def setChatPermissions(self, permissions_data):
 		"""
 		Set default chat permissions for a chat (see Telegram API doc).
 		{
-	
+			"chat_id": YOURCHATID, #required - string or integer according to Telegram API docs.
+			"permissions": {
+				"can_send_messages": None, #optional - boolean send text messages, contacts, locations and venues
+				"can_send_media_messages": None, #optional - boolean send audios, documents, photos, videos, video notes and voice notes
+				"can_send_polls": None, #optional - boolean send polls
+				"can_send_other_messages": None, #optional - boolean send animations, games, stickers and use inline bots
+				"can_add_web_page_previews": None, #optional - boolean add web page previews to their messages
+				"can_change_info" None, #optional - boolean change the chat title, photo and other settings
+				"can_invite_users" None, #optional - boolean invite new users to the chat
+				"can_pin_messages" None, #optional - boolean pin messages
+			}, #required - ChatPermissions object (see Telegram API doc).
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The set chat permissions request has been sent to the Telegram and True is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
 		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/setChatPermissions'
+		r = requests.post(url, json = permissions_data)
+
+		if(r.status_code == 200):
+			print("Chat permissions set...")
+		else:
+			print("Chat permissions could not be set - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 
 	def exportChatInviteLink(self):
 		"""
