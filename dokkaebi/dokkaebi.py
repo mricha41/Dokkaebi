@@ -1678,7 +1678,6 @@ class Dokkaebi(object):
 				print("Request object returned: \n" + r.text)
 
 		return r
-		"""
 
 	def setMyCommands(self, commands):
 		"""
