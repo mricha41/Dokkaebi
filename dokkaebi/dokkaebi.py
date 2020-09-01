@@ -236,6 +236,42 @@ class Dokkaebi(object):
 				print("Request object returned: \n" + r.text)
 				return r
 
+	def getUpdates(self, update_data = None):
+		"""
+		Gets updates from Telegram.
+		{ 
+			"offset": None, #optional - int identifier of the first update to be returned by Telegram. 
+			"limit": , #optional - int limit set for the number of updates retrieved.
+			"timeout": , #optional - int timeout in seconds used for polling.
+			"allowed_updates": UpdateJsonObject #optional - array of Update json objects see https://core.telegram.org/bots/api#update.
+		}
+
+		RETURNS: Message json object
+
+		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
+
+		POSTCONDITION:
+		On success, a Telegram Update json object is returned. 
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
+		"""
+		if(update_data != None):
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getUpdates'
+			r = requests.get(url, update_data)
+		else:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getUpdates'
+			r = requests.get(url)
+
+		if(r.status_code == 200):
+			print("Updates received...")
+		else:
+			print("Updates could not be retrieved - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+				
+		return r
+
 	def sendMessage(self, message_data):
 		"""
 		Sends a message to Telegram.
@@ -1592,7 +1628,7 @@ class Dokkaebi(object):
 		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
-		The set chat sticker set message request has been sent to the Telegram and the json is returned on
+		The set chat sticker set message request has been sent to Telegram and the json is returned on
 		success.
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
@@ -1609,18 +1645,39 @@ class Dokkaebi(object):
 
 		return r
 
-	def answerCallbackQuery(self):
+	def answerCallbackQuery(self, callback_data):
 		"""
 		Send answers to callback queries sent from inline keyboards (see Telegram API doc).
 		{
-	
+			"callback_query_id": "ID", #required - string unique id of the query to be answered.
+			"text": "TEXT", #optional - string text of the notification.
+			"show_alert": None, #optional - boolean show an alert instead of a notification at the top of the screen.
+			"url": None, #optional - string url to be opened by the user's client.
+			"cache_time": #optional - int max time the callback should be cached on the user's client (default is zero).
 		}
 
 		RETURNS: boolean
 		
 		PRECONDITION:
+		A Telegram bot has been created and the Dokkaebi instance has been constructed.
 
 		POSTCONDITION:
+		The answer callback query request has been sent to Telegram and the json is returned on
+		success.
+		Otherwise, if the request failed with an error the request object is printed
+		to the console and returned.
+		"""
+		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/answerCallbackQuery'
+		r = requests.post(url, data = callback_data)
+		
+		if(r.status_code == 200):
+			print("Answer callback query completed...")
+		else:
+			print("Could not complete the answer callback query - error: " + format(r.status_code))
+			if r and r is not None:
+				print("Request object returned: \n" + r.text)
+
+		return r
 		"""
 
 	def setMyCommands(self, commands):

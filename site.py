@@ -1,3 +1,8 @@
+#one gigantic, monolithic example of most of
+#the API wrapper. see https://core.telegram.org/bots/api#available-methods
+#for the complete list and some insight on
+#how the wrapper works
+
 from dokkaebi import dokkaebi
 from configparser import ConfigParser
 import requests
