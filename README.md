@@ -24,7 +24,7 @@ MIT
 
 The following tasks, in no particular order, are currently in the queue:
 
-- Implement all Telegram Bot API available method wrappers
+- ~~Implement all Telegram Bot API available method wrappers~~
 - Complete hooks for all stages in the bot pipeline
 - Complete serialization/deserialization helpers
 - Complete additional helpers as determined throughout development
