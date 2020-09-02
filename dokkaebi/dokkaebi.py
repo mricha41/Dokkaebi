@@ -1741,14 +1741,13 @@ class Dokkaebi(object):
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/getMyCommands'
 		r = requests.get(url)
 		if(r.status_code == 200):
-			print("Command list:")
-			print(r.json())
-			return r.json()
+			print("Get command request received...")
 		else:
 			print("Commands could not be retrieved - error: " + format(r.status_code))
 			if r and r is not None:
 				print("Request object returned: \n" + r.text)
-				return r
+				
+		return r
 
 	def closeServer(self):
 		"""
