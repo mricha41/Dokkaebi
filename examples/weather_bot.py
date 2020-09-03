@@ -122,7 +122,7 @@ class Bot(dokkaebi.Dokkaebi):
 					temp = None
 					feel = None
 					desc = None
-					
+
 					if res and res.get("main") and res["main"] != None:
 						temp = res["main"]["temp"]
 						feel = res["main"]["feels_like"]
