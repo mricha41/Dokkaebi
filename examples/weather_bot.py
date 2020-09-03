@@ -100,13 +100,13 @@ class Bot(dokkaebi.Dokkaebi):
 				#and act accordingly
 				if len(user_parameters) > 1:
 					city = " ".join(user_parameters)
-					city.translate(str.maketrans('', '', string.punctuation))
+					city = city.translate(str.maketrans('', '', string.punctuation))
 					city = city.replace("’", "")
 				elif len(user_parameters) == 0:
 					city = ""
 				else:
 					city = user_parameters[0]
-					city.translate(str.maketrans('', '', string.punctuation))
+					city = city.translate(str.maketrans('', '', string.punctuation))
 					city = city.replace("’", "")
 
 				print(city)
@@ -119,16 +119,30 @@ class Bot(dokkaebi.Dokkaebi):
 					#differently and you require units as a command parameter)
 					res = requests.get("http://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&units=imperial&appid=" + openweather["key"]).json()
 					#print(res)
-					temp = res["main"]["temp"]
-					feel = res["main"]["feels_like"]
-					desc = res["weather"][0]["description"]
+					temp = None
+					feel = None
+					desc = None
+					
+					if res and res.get("main") and res["main"] != None:
+						temp = res["main"]["temp"]
+						feel = res["main"]["feels_like"]
 
-					#don't just stand there...
-					#send them the weather!
-					self.sendMessage({
-						"chat_id": chat_id, 
-						"text": "The current weather for " + city + ", USA:\n" + "Temperature: {}".format(temp) + "\nDescription: " + desc + "\nFeels like: {}".format(feel)
-					})
+
+					if res.get("weather") and res["weather"][0] != None:
+						desc = res["weather"][0]["description"]
+
+					if temp and feel and desc:
+						#don't just stand there...
+						#send them the weather!
+						self.sendMessage({
+							"chat_id": chat_id, 
+							"text": "The current weather for " + city + ", USA:\n" + "Temperature: {}".format(temp) + "\nDescription: " + desc + "\nFeels like: {}".format(feel)
+						})
+					else:
+						self.sendMessage({
+							"chat_id": chat_id, 
+							"text": "There was an error with the city you entered. Please check the spelling and try again."
+						})
 				else:
 					self.sendMessage({
 						"chat_id": chat_id, 
