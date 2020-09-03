@@ -7,6 +7,8 @@ import sys
 sys.path.append("../dokkaebi")
 print(sys.path)
 
+import string
+
 import requests
 from dokkaebi import dokkaebi
 from configparser import ConfigParser
@@ -55,6 +57,7 @@ class Bot(dokkaebi.Dokkaebi):
 				#this will work both for single word commands
 				#and multi-word commands
 				command = data["message"]["text"].split(' ')[0] #grab command keyword...
+				user_parameters = ""
 				if data["message"]["text"].split(' ')[1:]:
 					user_parameters = data["message"]["text"].split(' ')[1:] #get the rest of the user's text...
 			else:
@@ -97,26 +100,40 @@ class Bot(dokkaebi.Dokkaebi):
 				#and act accordingly
 				if len(user_parameters) > 1:
 					city = " ".join(user_parameters)
+					city.translate(str.maketrans('', '', string.punctuation))
+					city = city.replace("’", "")
+				elif len(user_parameters) == 0:
+					city = ""
 				else:
 					city = user_parameters[0]
+					city.translate(str.maketrans('', '', string.punctuation))
+					city = city.replace("’", "")
 
-				#openweather provides units parameter - we use imperial in the US
-				#but the other option is metric, or don't pass in units and you'll get
-				#a temperature in kelvin. if you do that, you can use the conversion
-				#functions if/when you wish to convert (for example the user wants to see it
-				#differently and you require units as a command parameter)
-				res = requests.get("http://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&units=imperial&appid=b7dd0e7141d7c2d43efbd93d05284165").json()
-				#print(res)
-				temp = res["main"]["temp"]
-				feel = res["main"]["feels_like"]
-				desc = res["weather"][0]["description"]
+				print(city)
 
-				#don't just stand there...
-				#send them the weather!
-				self.sendMessage({
-					"chat_id": chat_id, 
-					"text": "The current weather for " + city + ", USA:\n" + "Temperature: {}".format(temp) + "\nDescription: " + desc + "\nFeels like: {}".format(feel)
-				})
+				if city != "":
+					#openweather provides units parameter - we use imperial in the US
+					#but the other option is metric, or don't pass in units and you'll get
+					#a temperature in kelvin. if you do that, you can use the conversion
+					#functions if/when you wish to convert (for example the user wants to see it
+					#differently and you require units as a command parameter)
+					res = requests.get("http://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&units=imperial&appid=b7dd0e7141d7c2d43efbd93d05284165").json()
+					#print(res)
+					temp = res["main"]["temp"]
+					feel = res["main"]["feels_like"]
+					desc = res["weather"][0]["description"]
+
+					#don't just stand there...
+					#send them the weather!
+					self.sendMessage({
+						"chat_id": chat_id, 
+						"text": "The current weather for " + city + ", USA:\n" + "Temperature: {}".format(temp) + "\nDescription: " + desc + "\nFeels like: {}".format(feel)
+					})
+				else:
+					self.sendMessage({
+						"chat_id": chat_id, 
+						"text": "There was an error with the city you entered. Please check the spelling and try again."
+					})
 			else:
 				msg = {
 					"chat_id": chat_id,
