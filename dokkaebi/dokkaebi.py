@@ -283,7 +283,14 @@ class Dokkaebi(object):
 			"disable_web_page_preview": None, #optional - boolean disables a web preview if sending a link.
 			"disable_notification": None, #optional - boolean disables notification sound and sends message silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
-			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
+			"reply_markup": {
+				"keyboard": [
+					["option 1"],
+					["option 2"],
+					["option 3"],
+					["option 4"]
+				]
+			} #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
 		}
 
 		RETURNS: Message json object
@@ -297,7 +304,10 @@ class Dokkaebi(object):
 		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendMessage'
-		r = requests.post(url, data = message_data)
+		if "reply_markup" in message_data:
+			r = requests.post(url, json = message_data)
+		else:
+			r = requests.post(url, data = message_data)
 
 		if(r.status_code == 200):
 			print("Message sent...")

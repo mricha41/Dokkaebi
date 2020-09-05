@@ -46,19 +46,57 @@ class Bot(dokkaebi.Dokkaebi):
 
 			chat_id = data["message"]["chat"]["id"]
 			user_first_name = data["message"]["from"]["first_name"]
-			
-			if command in ["/start", "/start@" + self.bot_info["username"]]:
-				msg = {
-					"chat_id": chat_id,
-					"text": "Thanks for using "  + self.bot_info["username"] + ", " + user_first_name + "!"
-				}
-				print(self.sendMessage(msg).json())
+
+			if "reply_to_message" in data["message"]:
+				if data["message"]["reply_to_message"]["from"]["username"] == self.bot_info["username"]:
+					print(self.sendMessage({"chat_id": chat_id, "text": "Thanks for picking - " + data["message"]["text"]}).json())
 			else:
-				msg = {
-					"chat_id": chat_id,
-					"text": "I didn't quite get that, " + user_first_name + ". Please try a valid command."
-				}
-				self.sendMessage(msg)
+				if command in ["/start", "/start@" + self.bot_info["username"]]:
+					msg = {
+						"chat_id": chat_id,
+						"text": "Thanks for using "  + self.bot_info["username"] + ", " + user_first_name + "!"
+					}
+					print(self.sendMessage(msg).json())
+				elif command in ["/link", "/link@" + self.bot_info["username"]]:
+					#see the formatting example for more
+					#html/markdown examples
+					msg = {
+						"chat_id": chat_id,
+						"text": "here's <a href=\"https://github.com/mricha41/Dokkaebi\">a link</a> to the Dokkaebi github repo.",
+						"disable_web_page_preview": True,
+						"parse_mode": "html",
+						"disable_notification": True
+					}
+					print(self.sendMessage(msg).json())
+				elif command in ["/reply", "/reply@" + self.bot_info["username"]]:
+					reply_id = data["message"]["message_id"]
+					self.sendMessage({
+						"chat_id": chat_id,
+						"text": "I see you sent me something - here's something back at ya!",
+						"reply_to_message_id": reply_id
+					})
+				elif command in ["/replyoptions", "/replyoptions@" + self.bot_info["username"]]:
+					reply_id = data["message"]["message_id"]
+					print(self.sendMessage({
+						"chat_id": chat_id,
+						"text": "I see you sent me something - here's something back at ya!",
+						"reply_to_message_id": reply_id,
+						"reply_markup": {
+							"keyboard": [
+								["option 1"],
+								["option 2"],
+								["option 3"],
+								["option 4"]
+							],
+							"one_time_keyboard": True
+						}
+					}).json())
+				else:
+					msg = {
+						"chat_id": chat_id,
+						"text": "I didn't quite get that, " + user_first_name + ". Please try a valid command."
+					}
+					self.sendMessage(msg)
 		
 	def onInit(self):
 		self.setMyCommands(bot_commands)

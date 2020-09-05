@@ -63,7 +63,7 @@ class Bot(dokkaebi.Dokkaebi):
 			elif command in ["/htmllink", "/htmllink@" + self.bot_info["username"]]:
 				msg = {
 					"chat_id": chat_id,
-					"text": "here's <a href=\"https://github.com/mricha41/Dokkaebi\">a link</a> to the Dokkaebi github repo\\.",
+					"text": "here's <a href=\"https://github.com/mricha41/Dokkaebi\">a link</a> to the Dokkaebi github repo.",
 					#"disable_web_page_preview": True,
 					"parse_mode": "html"
 				}
