@@ -34,8 +34,8 @@ hook_data = {
 #here, i put an example in with
 #each command to illustrate its use
 #keep in mind that Telegram will drop
-#this data when it stores it, so use
-#this data for example storeage/retrieval
+#the extra fields when it stores it, so use
+#this copy of the data for example storeage/retrieval
 bot_commands = {
 	"commands": [
 		{'command': 'start', 'description': 'starts the bot.', 'example': "Just issue /start in the Telegram message box."},
@@ -52,6 +52,7 @@ openweather = {
 class Bot(dokkaebi.Dokkaebi):
 	def handleData(self, data):
 		print(data)
+		command = None
 		if "message" in data:
 			if "text" in data["message"]:
 				#this will work both for single word commands
@@ -61,7 +62,7 @@ class Bot(dokkaebi.Dokkaebi):
 				if data["message"]["text"].split(' ')[1:]:
 					user_parameters = data["message"]["text"].split(' ')[1:] #get the rest of the user's text...
 			else:
-				command = ""
+				command = None
 
 			chat_id = data["message"]["chat"]["id"]
 			user_first_name = data["message"]["from"]["first_name"]
@@ -103,15 +104,15 @@ class Bot(dokkaebi.Dokkaebi):
 					city = city.translate(str.maketrans('', '', string.punctuation))
 					city = city.replace("’", "")
 				elif len(user_parameters) == 0:
-					city = ""
+					city = None				
 				else:
 					city = user_parameters[0]
 					city = city.translate(str.maketrans('', '', string.punctuation))
 					city = city.replace("’", "")
 
-				print(city)
+				#print(city)
 
-				if city != "":
+				if city != None:
 					#openweather provides units parameter - we use imperial in the US
 					#but the other option is metric, or don't pass in units and you'll get
 					#a temperature in kelvin. if you do that, you can use the conversion

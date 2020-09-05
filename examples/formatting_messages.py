@@ -53,6 +53,52 @@ class Bot(dokkaebi.Dokkaebi):
 					"text": "Thanks for using "  + self.bot_info["username"] + ", " + user_first_name + "!"
 				}
 				print(self.sendMessage(msg).json())
+			elif command in ["/html", "/html@" + self.bot_info["username"]]:
+				msg = {
+					"chat_id": chat_id,
+					"text": "This message uses <b>bold</b>, <i>italics</i>, <u>underline</u>, and <s>strikethrough</s> text.",
+					"parse_mode": "html"
+				}
+				print(self.sendMessage(msg).json())
+			elif command in ["/htmllink", "/htmllink@" + self.bot_info["username"]]:
+				msg = {
+					"chat_id": chat_id,
+					"text": "here's <a href=\"https://github.com/mricha41/Dokkaebi\">a link</a> to the Dokkaebi github repo\\.",
+					#"disable_web_page_preview": True,
+					"parse_mode": "html"
+				}
+				print(self.sendMessage(msg).json())
+			elif command in ["/pyhtml", "/pyhtml@" + self.bot_info["username"]]:
+				msg = {
+					"chat_id": chat_id,
+					"text": "<code>//this is pseudo code\npseudoPrint(\"inline hello\");</code>"
+							+ "<pre>pseudoPrint(\"pre-formatted hello\");</pre>"
+							+ "<pre><code class=\"language-python\">\n#this is python code\ndef func(arg):\n\tdoStuff()</code></pre>",
+					"parse_mode": "html"
+				}
+				print(self.sendMessage(msg).json())
+			elif command in ["/markdown", "/markdown@" + self.bot_info["username"]]:
+				msg = {
+					"chat_id": chat_id,
+					"text": "This message uses *bold*, _italics_, __underline__, and ~strikethrough~ text\\.",
+					"parse_mode": "MarkdownV2"
+				}
+				print(self.sendMessage(msg).json())
+			elif command in ["/markdownlink", "/markdownlink@" + self.bot_info["username"]]:
+				msg = {
+					"chat_id": chat_id,
+					"text": "here's [a link](https://github.com/mricha41/Dokkaebi) to the Dokkaebi github repo\\.",
+					#"disable_web_page_preview": True,
+					"parse_mode": "MarkdownV2"
+				}
+				print(self.sendMessage(msg).json())
+			elif command in ["/pydown", "/pydown@" + self.bot_info["username"]]:
+				msg = {
+					"chat_id": chat_id,
+					"text": "`//this is pseudo code\npseudoPrint(\"inline hello\");`\n```\npseudoPrint(\"pre-formatted hello\");\n```\n```python\n#this is python code\ndef func(arg):\n\tdoStuff()\n```",
+					"parse_mode": "MarkdownV2"
+				}
+				print(self.sendMessage(msg).json())
 			else:
 				msg = {
 					"chat_id": chat_id,
