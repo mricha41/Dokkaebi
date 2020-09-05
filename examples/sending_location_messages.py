@@ -1,7 +1,7 @@
-#sending media messages with Dokkaebi
+#sending location messages with Dokkaebi
 #detailed example demonstrating
 #many of the parameters available
-#when sending media messages
+#when sending location messages
 
 #if you don't whish to set this
 #just copy the file to the top-level

@@ -118,7 +118,7 @@ class Bot(dokkaebi.Dokkaebi):
 					#a temperature in kelvin. if you do that, you can use the conversion
 					#functions if/when you wish to convert (for example the user wants to see it
 					#differently and you require units as a command parameter)
-					res = requests.get("http://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&units=imperial&appid=" + openweather["key"]).json()
+					res = requests.get("https://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&units=imperial&appid=" + openweather["key"]).json()
 					#print(res)
 					temp = None
 					feel = None

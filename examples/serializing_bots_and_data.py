@@ -1,7 +1,6 @@
-#sending media messages with Dokkaebi
+#serializing bots and data with Dokkaebi
 #detailed example demonstrating
-#many of the parameters available
-#when sending media messages
+#how to manage data in your apps
 
 #if you don't whish to set this
 #just copy the file to the top-level
@@ -17,7 +16,7 @@ from configparser import ConfigParser
 #config to be read relative to that path
 #even though this file is in the examples folder
 config = ConfigParser()
-config.read('config.ini')
+config.read('serialization_example.ini')
 
 #be sure to cast anything that shouldn't
 #be a string - reading the .ini file

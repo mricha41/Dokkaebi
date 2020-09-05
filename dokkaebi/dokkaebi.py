@@ -389,7 +389,7 @@ class Dokkaebi(object):
 			"duration": None, #optional - int duration in seconds.
 			"performer": None, #optional - string performer name.
 			"title": None, #optional - string title of audio.
-			"thumb": None, #optional - input file or string (see Telegram API doc) 
+			"thumb": {"thumb": open("path/to/thumb.jpg", "rb")}, #optional - input file or string (see Telegram API doc) 
 			"disable_notification": None, #optional - disable notification sound to send audio to user silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
@@ -406,8 +406,12 @@ class Dokkaebi(object):
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio'
-		r = requests.post(url, data = audio_data)
+		if "thumb" in audio_data:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio?chat_id={}'.format(audio_data["chat_id"])
+			r = requests.post(url, files = audio_data["thumb"], data = audio_data)
+		else:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAudio'
+			r = requests.post(url, data = audio_data)
 
 		if(r.status_code == 200):
 			print("Audio sent...")
@@ -424,7 +428,7 @@ class Dokkaebi(object):
 		{
 			"chat_id": CHATID, #required - string or integer according to Telegram API docs
 			"document": FILEORURL, #required - input file, file_id as string or url to document as string (see Telegram API doc).
-			"thumb": None, #optional - input file or string (see Telegram API doc)
+			"thumb": {"thumb": open("path/to/thumb.jpg", "rb")}, #optional - input file or string (see Telegram API doc)
 			"caption": "CAPTION", #optional - string description of the document.
 			"parse_mode": None, #optional - string html or markdown (see Telegram API doc).
 			"disable_notification": None, #optional - disable notification sound to send document to user silently.
@@ -443,8 +447,12 @@ class Dokkaebi(object):
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDocument'
-		r = requests.post(url, data = document_data)
+		if "thumb" in document_data:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDocument?chat_id={}'.format(document_data["chat_id"])
+			r = requests.post(url, files = document_data["thumb"], data = document_data)
+		else:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendDocument'
+			r = requests.post(url, data = document_data)
 
 		if(r.status_code == 200):
 			print("Document sent...")
@@ -464,7 +472,7 @@ class Dokkaebi(object):
 			"duration": None, #optional - int duration in seconds.
 			"width": None, #optional - int width of video.
 			"height": None, #optional - int height of video.
-			"thumb": None, #optional - input file or string (see Telegram API doc)
+			"thumb": {"thumb": open("path/to/thumb.jpg", "rb")}, #optional - input file or string (see Telegram API doc)
 			"caption": "CAPTION", #optional - string description of the video.
 			"parse_mode": None, #optional - string html or markdown for video caption (see Telegram API doc).
 			"supports_streaming": None, #optional - True if video can be streamed.			 
@@ -484,8 +492,12 @@ class Dokkaebi(object):
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideo'
-		r = requests.post(url, data = video_data)
+		if "thumb" in video_data:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideo?chat_id={}'.format(video_data["chat_id"])
+			r = requests.post(url, files = video_data["thumb"], data = video_data)
+		else:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideo'
+			r = requests.post(url, data = video_data)
 
 		if(r.status_code == 200):
 			print("Video sent...")
@@ -505,7 +517,7 @@ class Dokkaebi(object):
 			"duration": None, #optional - int duration in seconds.
 			"width": None, #optional - int width of animation.
 			"height": None, #optional - int height of animation.
-			"thumb": None, #optional - input file or string (see Telegram API doc).
+			"thumb": {"thumb": open("path/to/thumb.jpg", "rb")}, #optional - input file or string (see Telegram API doc).
 			"caption": "CAPTION", #optional - string description of the animation.
 			"parse_mode": None, #optional - string html or markdown for animation caption (see Telegram API doc).
 			"disable_notification": None, #optional - disable notification sound to send animation to user silently.
@@ -524,8 +536,12 @@ class Dokkaebi(object):
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAnimation'
-		r = requests.post(url, data = animation_data)
+		if "thumb" in animation_data:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAnimation?chat_id={}'.format(animation_data["chat_id"])
+			r = requests.post(url, files = animation_data["thumb"], data = animation_data)
+		else:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendAnimation'
+			r = requests.post(url, data = animation_data)
 
 		if(r.status_code == 200):
 			print("Animation sent...")
@@ -581,7 +597,7 @@ class Dokkaebi(object):
 			"video_note": "FILE", #required - InputFile or string according to Telegram API docs.
 			"duration": None, #optional - int duration in seconds.
 			"length": None, #optional - int diameter of video note according to Telegram API docs.
-			"thumb": None, #optional - input file or string (see Telegram API doc)
+			"thumb": {"thumb": open("path/to/thumb.jpg", "rb")}, #optional - input file or string (see Telegram API doc)
 			"disable_notification": None, #optional - disable notification sound to send video note to user silently.
 			"reply_to_message_id": None, #optional - optional id of the original message if the message is a reply.
 			"reply_markup": None #optional - See Telegram API documentation, pass in InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply.
@@ -598,8 +614,12 @@ class Dokkaebi(object):
 		Otherwise, if the request failed with an error the request object is printed
 		to the console and returned.
 		"""
-		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideoNote'
-		r = requests.post(url, data = video_note_data)
+		if "thumb" in video_note_data:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideoNote?chat_id={}'.format(video_note_data["chat_id"])
+			r = requests.post(url, files = video_note_data["thumb"], data = video_note_data)
+		else:
+			url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/sendVideoNote'
+			r = requests.post(url, data = video_note_data)
 
 		if(r.status_code == 200):
 			print("Video note sent...")

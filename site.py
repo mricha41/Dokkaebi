@@ -53,7 +53,7 @@ class Bot(dokkaebi.Dokkaebi):
 				}
 				self.sendPhoto(photo)
 			elif command in ["/bark", "/bark@" + self.bot_info["username"]]:
-				self.sendAudio({"chat_id": chat_id, "audio": "https://tunelilu.com/pr2/Barking_Dog.mp3"})
+				self.sendAudio({"chat_id": chat_id, "audio": "http://www.orangefreesounds.com/wp-content/uploads/2015/07/Dog-barking-mp3.mp3"})
 			elif command in ["/cheatsheet", "/cheatsheet@" + self.bot_info["username"]]:
 				self.sendDocument({"chat_id": chat_id, "document": "https://static.realpython.com/python-cheat-sheet.pdf"})
 			elif command in ["/jump", "/jump@" + self.bot_info["username"]]:
@@ -94,7 +94,6 @@ class Bot(dokkaebi.Dokkaebi):
 				
 				self.last_location_message = self.sendLocation(location).json()["result"]
 				print(self.last_location_message["message_id"])
-
 			elif command in ["/findmenow", "/findmenow@" + self.bot_info["username"]]:
 				location = {
 					"chat_id": chat_id,

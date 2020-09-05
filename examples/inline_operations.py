@@ -1,7 +1,7 @@
-#sending media messages with Dokkaebi
+#inline operations with Dokkaebi
 #detailed example demonstrating
-#many of the parameters available
-#when sending media messages
+#many of the available inline
+#operations you can use with bots
 
 #if you don't whish to set this
 #just copy the file to the top-level

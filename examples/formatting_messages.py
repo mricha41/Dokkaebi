@@ -1,7 +1,7 @@
-#sending media messages with Dokkaebi
+#formatting messages with Dokkaebi
 #detailed example demonstrating
-#many of the parameters available
-#when sending media messages
+#available Telegram functionality
+#when formatting messages
 
 #if you don't whish to set this
 #just copy the file to the top-level

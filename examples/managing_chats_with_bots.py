@@ -1,7 +1,7 @@
-#sending media messages with Dokkaebi
+#managing chats with Dokkaebi
 #detailed example demonstrating
-#many of the parameters available
-#when sending media messages
+#many of the available methods
+#for managing chats with bots
 
 #if you don't whish to set this
 #just copy the file to the top-level
