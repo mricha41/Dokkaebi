@@ -54,8 +54,7 @@ class Dokkaebi(object):
 
 		#crank up a CherryPy server
 		cherrypy.config.update({
-		    #'environment': 'production',
-		    #'log.screen': False,
+		    'environment': self.webhook_config["environment"],
 		    'server.socket_host': self.webhook_config["hostname"],
 		    'server.socket_port': self.webhook_config["port"],
 		})

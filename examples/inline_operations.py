@@ -26,7 +26,8 @@ hook_data = {
 	'hostname': config["Telegram"]["HOSTNAME"], 
 	'port': int(config["Telegram"]["PORT"]), 
 	'token': config["Telegram"]["BOT_TOKEN"], 
-	'url': config["Telegram"]["WEBHOOK_URL"]
+	'url': config["Telegram"]["WEBHOOK_URL"],
+	'environment': config["Telegram"]["ENVIRONMENT"]
 }
 
 bot_commands = {
