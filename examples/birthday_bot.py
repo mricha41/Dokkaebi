@@ -10,6 +10,7 @@ print(sys.path)
 import string
 
 import requests
+import json
 from dokkaebi import dokkaebi
 from configparser import ConfigParser
 
@@ -211,6 +212,8 @@ class Bot(dokkaebi.Dokkaebi):
 
 		else:
 			#check for a reply, since it's not a command
+			chat_id = data["message"]["chat"]["id"]
+			user_first_name = data["message"]["from"]["first_name"]
 			if self.last_reply_id and self.last_reply_id != None:
 				looking_for_reply_id = self.last_reply_id + 1
 				print("last reply id: {}".format(self.last_reply_id))
@@ -219,6 +222,14 @@ class Bot(dokkaebi.Dokkaebi):
 				if int(data["message"]["message_id"]) == looking_for_reply_id:#and "message" in data and "text" in data["message"]:
 					selected_month = data["message"]["text"]
 					print(selected_month)
+					with open('data/bday.json', mode='w', encoding='utf-8') as f:
+						json.dump({
+								"chat_id": chat_id,
+								"user_first_name": user_first_name,
+								"month": selected_month
+							}, 
+						f,
+						indent=2)
 				else:
 					print("Not a reply to /birthday")
 			else:
