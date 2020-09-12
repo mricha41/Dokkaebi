@@ -8,8 +8,6 @@ sys.path.append("../dokkaebi")
 print(sys.path)
 
 import string
-
-import requests
 import json
 from dokkaebi import dokkaebi
 from configparser import ConfigParser
@@ -51,91 +49,6 @@ class Bot(dokkaebi.Dokkaebi):
 	
 	def handleData(self, data):
 		print(data)
-		"""
-		{
-			'update_id': 840426172, 
-			'message': {
-				'message_id': 1145, 
-				'from': {
-					'id': 773890555, 
-					'is_bot': False, 
-					'first_name': 'Butcher', 
-					'last_name': 'Pete', 
-					'language_code': 'en'
-				}, 
-				'chat': {
-					'id': 773890555, 
-					'first_name': 
-					'Butcher', 
-					'last_name': 'Pete', 
-					'type': 'private'
-				}, 
-				'date': 1599618177, 
-				'text': 'October'
-			}
-		}
-		{
-			'ok': True, 
-			'result': {
-				'message_id': 1144, 
-				'from': {
-					'id': 1176480601, 
-					'is_bot': True, 
-					'first_name': 'BirthdayBot3K', 
-					'username': 'Birthday3KBot'
-				}, 
-				'chat': {
-					'id': 773890555, 
-					'first_name': 'Butcher', 
-					'last_name': 'Pete', 
-					'type': 'private'
-				}, 
-				'date': 1599618162, 
-				'reply_to_message': {
-					'message_id': 1143, 
-					'from': {
-						'id': 773890555, 
-						'is_bot': False, 
-						'first_name': 'Butcher', 
-						'last_name': 'Pete', 
-						'language_code': 'en'
-					}, 
-					'chat': {
-						'id': 773890555, 
-						'first_name': 'Butcher', 
-						'last_name': 'Pete', 
-						'type': 'private'
-					}, 
-					'date': 1599618161, 
-					'text': '/birthday', 
-					'entities': [{'offset': 0, 'length': 9, 'type': 'bot_command'}]
-				}, 
-				'text': 'Select a month, Butcher.'
-			}
-		}
-		{
-			'update_id': 840426171, 
-			'message': {
-				'message_id': 1143, 
-				'from': {
-					'id': 773890555, 
-					'is_bot': False, 
-					'first_name': 'Butcher', 
-					'last_name': 'Pete', 
-					'language_code': 'en'
-				}, 
-				'chat': {
-					'id': 773890555, 
-					'first_name': 'Butcher', 
-					'last_name': 'Pete', 
-					'type': 'private'
-				}, 
-				'date': 1599618161, 
-				'text': '/birthday', 
-				'entities': [{'offset': 0, 'length': 9, 'type': 'bot_command'}]
-			}
-		}
-		"""
 		if "entities" in data["message"] and data["message"]["entities"][0]["type"] == "bot_command":
 			#it's a command, so process it as such
 			if "message" in data:
@@ -214,6 +127,7 @@ class Bot(dokkaebi.Dokkaebi):
 			#check for a reply, since it's not a command
 			chat_id = data["message"]["chat"]["id"]
 			user_first_name = data["message"]["from"]["first_name"]
+			#user_last_name = data["message"]["from"]["last_name"]
 			if self.last_reply_id and self.last_reply_id != None:
 				looking_for_reply_id = self.last_reply_id + 1
 				print("last reply id: {}".format(self.last_reply_id))
@@ -226,6 +140,7 @@ class Bot(dokkaebi.Dokkaebi):
 						json.dump({
 								"chat_id": chat_id,
 								"user_first_name": user_first_name,
+								#"user_last_name": user_last_name,
 								"month": selected_month
 							}, 
 						f,
@@ -233,7 +148,7 @@ class Bot(dokkaebi.Dokkaebi):
 				else:
 					print("Not a reply to /birthday")
 			else:
-				print("Not a reply to /birthday")
+				print("Possible reply, not a reply to /birthday")
 
 	def onInit(self):
 		self.setMyCommands(bot_commands)

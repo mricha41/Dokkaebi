@@ -18,10 +18,11 @@ class Dokkaebi(object):
 		"""
 		Dokkaebi bot construction requires passing in a dictionary of the following form, for example:
 		hook = {
-			'hostname': '127.0.0.1', 
-			'port': 80, 
-			'token': 'yourtelegrambottokenhere', 
-			'url': 'https://yourwebhookurlhere.com'
+			'hostname': '127.0.0.1', #optional
+			'port': 80, #optional
+			'token': 'yourtelegrambottokenhere', #required 
+			'url': 'https://yourwebhookurlhere.com', #optional
+			'environment': "CherryPy Environment value" #optional
 		}
 		d = dokkaebi.Dokkaebi(hook)
 		PRECONDITION:
@@ -32,33 +33,46 @@ class Dokkaebi(object):
 		self.webhook_config = hook
 		self.update_received_count = 0
 
-		print("Starting Dokkaebi bot...")
-		print("Ctrl+C to quit")
+		if hook and hook != None and all (keys in hook for keys in ["hostname", "port", "url"]):
+			print("Starting Dokkaebi bot...")
+			print("Ctrl+C to quit")
 
-		#make sure there is no live webhook before setting it
-		self.deleteWebhook()
+			#make sure there is no live webhook before setting it
+			self.deleteWebhook()
 
-		#store current webhook info upon setting it successfully
-		self.setWebhook()
-		self.webhook_info = self.getWebhookInfo()
+			#store current webhook info upon setting it successfully
+			self.setWebhook()
+			self.webhook_info = self.getWebhookInfo()
 
-		#store the bot info
-		self.bot_info = self.getMe()
+			#store the bot info
+			self.bot_info = self.getMe()
 
-		#hook for init work that
-		#needs accomplished in derived classes
-		#before the server starts
-		self.onInit()
+			#hook for init work that
+			#needs accomplished in derived classes
+			#before the server starts
+			self.onInit()
 
-		print("running cherrypy version: " + cherrypy.__version__)
+			print("running cherrypy version: " + cherrypy.__version__)
 
-		#crank up a CherryPy server
-		cherrypy.config.update({
-		    #'environment': self.webhook_config["environment"],
-		    'server.socket_host': self.webhook_config["hostname"],
-		    'server.socket_port': self.webhook_config["port"],
-		})
-		cherrypy.quickstart(self, '/')
+			#crank up a CherryPy server
+			cherrypy.config.update({
+			    #'environment': self.webhook_config["environment"],
+			    'server.socket_host': self.webhook_config["hostname"],
+			    'server.socket_port': self.webhook_config["port"],
+			})
+			cherrypy.quickstart(self, '/')
+		else:
+			print("Dokkaebi bot initializing without CherryPy...")
+
+			#store the bot info
+			self.bot_info = self.getMe()
+
+			#hook for init work that
+			#needs accomplished in derived classes
+			#before the server starts
+			self.onInit()
+
+			print("Dokkaebi initialized successfully.")
 
 	@cherrypy.expose
 	@cherrypy.tools.json_in()
