@@ -31,8 +31,6 @@ class CheckBirthdays(dokkaebi.Dokkaebi):
 			bday = json.load(f)
 		print(bday)
 		print(self.sendMessage({"chat_id": bday["chat_id"], "text": "Happy birthday, " + bday["user_first_name"] + "!!!"}).json())
-		#print("happy birthday!")
-		#return schedule.CancelJob
 
 hbd = CheckBirthdays(hook_data)
 

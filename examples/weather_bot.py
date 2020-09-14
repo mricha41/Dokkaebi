@@ -8,6 +8,7 @@ sys.path.append("../dokkaebi")
 print(sys.path)
 
 import string
+import datetime
 
 import requests
 from dokkaebi import dokkaebi
@@ -71,7 +72,7 @@ class Bot(dokkaebi.Dokkaebi):
 			if command in ["/start", "/start@" + self.bot_info["username"]]:
 				#for fun!
 				weather = "https://external-content.duckduckgo.com/iu/?u=https://media.giphy.com/media/5yvoGUhBsuBwY/giphy.gif&f=1&nofb=1"
-				self.sendAnimation({"chat_id": chat_id, "animation": weather})
+				print(self.sendAnimation({"chat_id": chat_id, "animation": weather}).json())
 				msg = {
 					"chat_id": chat_id,
 					"text": "Thanks for using "  + self.bot_info["username"] + ", " + user_first_name + "!\n" + "It's always wise to check the weather before you run outside. " + "&#128514;",
@@ -81,7 +82,7 @@ class Bot(dokkaebi.Dokkaebi):
 				print(self.sendMessage({
 					"chat_id": chat_id, 
 					"text": "Just submit a command to get weather information.\nFor example, the command: /cityweather San Diego\nwill return weather information for San Diego.\nUse the /help command for the full list of commands."
-				}))
+				}).json())
 			elif command in ["/help", "/help@" + self.bot_info["username"]]:
 				#append the help string from
 				#the bot_command data structure
@@ -96,7 +97,7 @@ class Bot(dokkaebi.Dokkaebi):
 				}
 				
 				#print(t.rstrip())
-				self.sendMessage(msg)
+				print(self.sendMessage(msg).json())
 			elif command in ["/cityweather", "/cityweather@" + self.bot_info["username"]]:
 				#check how long the city name is
 				#and act accordingly
@@ -119,43 +120,76 @@ class Bot(dokkaebi.Dokkaebi):
 					#a temperature in kelvin. if you do that, you can use the conversion
 					#functions if/when you wish to convert (for example the user wants to see it
 					#differently and you require units as a command parameter)
-					res = requests.get("https://api.openweathermap.org/data/2.5/weather?q=" + city + ",us&units=imperial&appid=" + openweather["key"]).json()
+					res = requests.get("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + openweather["key"]).json()
 					#print(res)
 					temp = None
+					min_temp = None
+					max_temp = None
 					feel = None
+					pressure = None
+					humidity = None
+					main = None
 					desc = None
+					icon = None
+					name = None
+					country = None
+					sunrise = None
+					sunset = None
 
-					if res and res.get("main") and res["main"] != None:
+					if res.get("main") and res["main"] != None:
 						temp = res["main"]["temp"]
 						feel = res["main"]["feels_like"]
-
+						min_temp = res["main"]["temp_min"]
+						max_temp = res["main"]["temp_max"]
+						pressure = res["main"]["pressure"]
+						humidity = res["main"]["humidity"]
 
 					if res.get("weather") and res["weather"][0] != None:
+						main = res["weather"][0]["main"]
 						desc = res["weather"][0]["description"]
+						icon = res["weather"][0]["icon"]
 
-					if temp and feel and desc:
+					if res.get("sys") and res["sys"] != None:
+						country = res["sys"]["country"]
+						sunrise = date = datetime.datetime.fromtimestamp(res["sys"]["sunrise"])
+						sunset = datetime.datetime.fromtimestamp(res["sys"]["sunset"])
+
+					if res.get("name") and res["name"] != None:
+						name = res["name"]
+
+					if temp and feel and min_temp and max_temp and pressure and humidity and main and desc and icon and name and country and sunrise and sunset:
 						#don't just stand there...
 						#send them the weather!
-						self.sendMessage({
-							"chat_id": chat_id, 
-							"text": "The current weather for " + city + ", USA:\n" + "Temperature: {}".format(temp) + "\nDescription: " + desc + "\nFeels like: {}".format(feel)
-						})
+						print(self.sendPhoto({
+							"chat_id": chat_id,
+							"photo": "http://openweathermap.org/img/wn/" + icon + "@2x.png", 
+							"caption": "The current weather for " + name + ", " + country + ":" +
+									"\n--------------------------------" +
+									"\n" + main + "/" + desc + "\n<b>Temperature</b>: {}".format(temp) +
+									"\n<i>Feels like</i>: {}".format(feel) +
+									"\n<b>Low</b>: {}".format(min_temp) + "\n<b>High</b>: {}".format(max_temp) +
+									"\n--------------------------------" +
+									"\n<i>Pressure</i>: {}".format(pressure) + "\n<i>Humidity</i>: {}".format(humidity) +
+									"\n--------------------------------" +
+									"\n<i>Sunrise</i>: {}".format(sunrise.ctime()) + "\n<i>Sunset</i>: {}".format(sunset.ctime()),
+							"parse_mode": "html"
+						}).json())
 					else:
-						self.sendMessage({
+						print(self.sendMessage({
 							"chat_id": chat_id, 
 							"text": "There was an error with the city you entered. Please check the spelling and try again."
-						})
+						}).json())
 				else:
-					self.sendMessage({
+					print(self.sendMessage({
 						"chat_id": chat_id, 
 						"text": "There was an error with the city you entered. Please check the spelling and try again."
-					})
+					}).json())
 			else:
 				msg = {
 					"chat_id": chat_id,
 					"text": "I didn't quite get that, " + user_first_name + ". Please try a valid command."
 				}
-				self.sendMessage(msg)
+				print(self.sendMessage(msg).json())
 
 	def kelvinToFahrenheit(self, temp):
 		return (temp - 273.15) * 1.8000 + 32.00
@@ -164,7 +198,7 @@ class Bot(dokkaebi.Dokkaebi):
 		return temp - 273.15
 		
 	def onInit(self):
-		self.setMyCommands(bot_commands)
-		self.getMyCommands()
+		print(self.setMyCommands(bot_commands).json())
+		print(self.getMyCommands().json())
 
 newBot = Bot(hook_data)
