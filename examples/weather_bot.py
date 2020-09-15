@@ -9,6 +9,8 @@ print(sys.path)
 
 import string
 import datetime
+from timezonefinder import TimezoneFinder
+from pytz import timezone
 
 import requests
 from dokkaebi import dokkaebi
@@ -70,8 +72,8 @@ class Bot(dokkaebi.Dokkaebi):
 						#print("user params: {}".format(user_parameters))
 						#print(user_parameters)
 					else: #no commas so its just the city
-						user_parameters = data["message"]["text"].split(' ')[1:] #again, could be a multi-word city...
-						#print("user params: {}".format(user_parameters))
+						user_parameters = " ".join(data["message"]["text"].split(' ')[1:]) #again, could be a multi-word city...
+						print("user params: {}".format(user_parameters))
 						#print(user_parameters[0])
 			else:
 				command = None
@@ -129,11 +131,13 @@ class Bot(dokkaebi.Dokkaebi):
 				elif len(user_parameters) == 2: #as an assumption, only the city and state/country were given
 					city = " ".join(user_parameters[:(len(user_parameters) - 1)])
 					#print(city)
+					state = user_parameters[len(user_parameters) - 1]
+					#print(state)
 					country_code = user_parameters[len(user_parameters) - 1]
 					#print(country_code)
 
 				else: #otherwise it was just a city so grab it and put it in the city string
-					city = user_parameters[0]
+					city = user_parameters
 					#print(city)
 
 				#remove any special characters
@@ -171,6 +175,15 @@ class Bot(dokkaebi.Dokkaebi):
 					country = None
 					sunrise = None
 					sunset = None
+					latitude = None
+					longitude = None
+					local_timezone = None
+					tf = TimezoneFinder()
+
+					if res.get("coord") and res["coord"] != None:
+						latitude = res["coord"]["lat"]
+						longitude = res["coord"]["lon"]
+						local_timezone = timezone(tf.timezone_at(lng=longitude, lat=latitude))
 
 					if res.get("main") and res["main"] != None:
 						temp = res["main"]["temp"]
@@ -187,8 +200,8 @@ class Bot(dokkaebi.Dokkaebi):
 
 					if res.get("sys") and res["sys"] != None:
 						country = res["sys"]["country"]
-						sunrise = date = datetime.datetime.fromtimestamp(res["sys"]["sunrise"])
-						sunset = datetime.datetime.fromtimestamp(res["sys"]["sunset"])
+						sunrise = date = datetime.datetime.fromtimestamp(res["sys"]["sunrise"], tz=local_timezone)
+						sunset = datetime.datetime.fromtimestamp(res["sys"]["sunset"], tz=local_timezone)
 
 					if res.get("name") and res["name"] != None:
 						name = res["name"]
@@ -212,7 +225,7 @@ class Bot(dokkaebi.Dokkaebi):
 									"\n--------------------------------" +
 									"\n<i>Pressure</i>: {}".format(pressure) + "\n<i>Humidity</i>: {}".format(humidity) +
 									"\n--------------------------------" +
-									"\n<i>Sunrise</i>: {}".format(sunrise.ctime()) + "\n<i>Sunset</i>: {}".format(sunset.ctime()),
+									"\n<i>Sunrise</i>: {}".format(sunrise.strftime("%A %B %d, %Y %X %Z")) + "\n<i>Sunset</i>: {}".format(sunset.strftime("%A %B %d, %Y %X %Z")),
 							"parse_mode": "html"
 						}).json())
 					else:
