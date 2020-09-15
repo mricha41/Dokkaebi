@@ -203,7 +203,7 @@ class Bot(dokkaebi.Dokkaebi):
 
 						print(self.sendPhoto({
 							"chat_id": chat_id,
-							"photo": "http://openweathermap.org/img/wn/" + icon + ".png", 
+							"photo": "http://openweathermap.org/img/wn/" + icon + "@4x.png", 
 							"caption": "The current weather for " + prep_place +
 									"\n--------------------------------" +
 									"\n" + main + "/" + desc + "\n<b>Temperature</b>: {}".format(temp) +
