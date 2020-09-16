@@ -69,8 +69,8 @@ class Bot(dokkaebi.Dokkaebi):
 						#re-establish the city name if multi-word (for example ["san", "luis", "obispo", "ca", "us"] 
 						#becomes reconstituted as ["san luis obispo", "ca", "us"] as you would want it to be)
 						user_parameters[0] = " ".join(user_parameters[0].split(' ')[1:])
-						#print("user params: {}".format(user_parameters))
-						#print(user_parameters)
+						print("user params: {}".format(user_parameters))
+						print(user_parameters)
 					else: #no commas so its just the city
 						user_parameters = " ".join(data["message"]["text"].split(' ')[1:]) #again, could be a multi-word city...
 						print("user params: {}".format(user_parameters))
@@ -122,23 +122,23 @@ class Bot(dokkaebi.Dokkaebi):
 				#city could be given along with state and country
 				if len(user_parameters) == 3: #city, state, and country were given
 					city = " ".join(user_parameters[:(len(user_parameters) - 2)])
-					#print(city)
+					print(city)
 					state = user_parameters[len(user_parameters) - 2]
-					#print(state)
+					print(state)
 					country_code = user_parameters[len(user_parameters) - 1]
-					#print(country_code)
+					print(country_code)
 					
 				elif len(user_parameters) == 2: #as an assumption, only the city and state/country were given
 					city = " ".join(user_parameters[:(len(user_parameters) - 1)])
-					#print(city)
+					print(city)
 					state = user_parameters[len(user_parameters) - 1]
-					#print(state)
+					print(state)
 					country_code = user_parameters[len(user_parameters) - 1]
-					#print(country_code)
+					print(country_code)
 
 				else: #otherwise it was just a city so grab it and put it in the city string
 					city = user_parameters
-					#print(city)
+					print(city)
 
 				#remove any special characters
 				city = city.translate(str.maketrans('', '', string.punctuation))
@@ -219,11 +219,11 @@ class Bot(dokkaebi.Dokkaebi):
 							"photo": "http://openweathermap.org/img/wn/" + icon + "@4x.png", 
 							"caption": "The current weather for " + prep_place +
 									"\n--------------------------------" +
-									"\n" + main + "/" + desc + "\n<b>Temperature</b>: {}".format(temp) +
-									"\n<i>Feels like</i>: {}".format(feel) +
-									"\n<b>Low</b>: {}".format(min_temp) + "\n<b>High</b>: {}".format(max_temp) +
+									"\n" + main + "/" + desc + "\n<b>Temperature</b>: {}".format(temp) + " °F" +
+									"\n<i>Feels like</i>: {}".format(feel) + " °F" +
+									"\n<b>Low</b>: {}".format(min_temp) + " °F" + "\n<b>High</b>: {}".format(max_temp) + " °F" +
 									"\n--------------------------------" +
-									"\n<i>Pressure</i>: {}".format(pressure) + "\n<i>Humidity</i>: {}".format(humidity) +
+									"\n<i>Pressure</i>: {}".format(pressure) + " hpa\n<i>Humidity</i>: {}".format(humidity) + "%" +
 									"\n--------------------------------" +
 									"\n<i>Sunrise</i>: {}".format(sunrise.strftime("%A %B %d, %Y %X %Z")) + "\n<i>Sunset</i>: {}".format(sunset.strftime("%A %B %d, %Y %X %Z")),
 							"parse_mode": "html"
