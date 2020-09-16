@@ -42,13 +42,27 @@ bot_commands = {
 	]
 }
 
+days = [["1"],["2"],["3"],["4"],["5"],
+		["6"],["7"],["8"],["9"],["10"],
+		["11"],["12"],["13"],["14"],["15"],
+		["16"],["17"],["18"],["19"],["20"],
+		["21"],["22"],["23"],["24"],["25"],
+		["26"],["27"],["28"],["29"],["30"],["31"]]
+
+months = [["January"],["February"],["March"],
+			["April"],["May"],["June"],
+			["July"],["August"],["September"],
+			["October"],["November"],["December"]]
+
 class Bot(dokkaebi.Dokkaebi):
 	#members
 	command = None
 	last_reply_id = 0
 	
 	def handleData(self, data):
+
 		print(data)
+
 		if "entities" in data["message"] and data["message"]["entities"][0]["type"] == "bot_command":
 			#it's a command, so process it as such
 			if "message" in data:
@@ -101,20 +115,7 @@ class Bot(dokkaebi.Dokkaebi):
 						"text": "Select a month, " + user_first_name + ".",
 						"reply_to_message_id": reply_id,
 						"reply_markup": {
-							"keyboard": [
-								["January"],
-								["February"],
-								["March"],
-								["April"],
-								["May"],
-								["June"],
-								["July"],
-								["August"],
-								["September"],
-								["October"],
-								["November"],
-								["December"]
-							],
+							"keyboard": months,
 							"one_time_keyboard": True
 						}
 					}).json())
@@ -126,25 +127,83 @@ class Bot(dokkaebi.Dokkaebi):
 		else:
 			#check for a reply, since it's not a command
 			chat_id = data["message"]["chat"]["id"]
-			user_first_name = data["message"]["from"]["first_name"]
-			#user_last_name = data["message"]["from"]["last_name"]
+			if "first_name" in data["message"]["from"]:
+				user_first_name = data["message"]["from"]["first_name"]
+			else:
+				user_first_name = ""
+			if "last_name" in data["message"]["from"]:
+				user_last_name = data["message"]["from"]["last_name"]
+			else:
+				user_last_name = ""
+
 			if self.last_reply_id and self.last_reply_id != None:
 				looking_for_reply_id = self.last_reply_id + 1
 				print("last reply id: {}".format(self.last_reply_id))
 				print("looking for id: {}".format(looking_for_reply_id))
 				print("actual id: {}".format(data["message"]["message_id"]))
-				if int(data["message"]["message_id"]) == looking_for_reply_id:#and "message" in data and "text" in data["message"]:
+				if int(data["message"]["message_id"]) == looking_for_reply_id: #first reply with a month...
+					user_id = data["message"]["from"]["id"]
 					selected_month = data["message"]["text"]
-					print(selected_month)
-					with open('data/bday.json', mode='w', encoding='utf-8') as f:
-						json.dump({
+					#print(selected_month)
+
+					#load it first to check records...
+					with open('data/bday.json', 'r', encoding='utf-8') as f:
+						bday = json.load(f)
+
+					#update it if it already exists...
+					if bday.get(str(user_id)):
+						bday[str(user_id)]["month"] = selected_month
+						#write it out to the file
+						with open('data/bday.json', mode='w', encoding='utf-8') as f:
+							json.dump(bday, f, indent=2)
+
+					#otherwise we need a new bday record
+					else:
+						new_bday = {
+							str(user_id) : {
 								"chat_id": chat_id,
 								"user_first_name": user_first_name,
-								#"user_last_name": user_last_name,
-								"month": selected_month
-							}, 
-						f,
-						indent=2)
+								"user_last_name": user_last_name,
+								"month": selected_month,
+								"day": ""
+							}
+						}
+						#append it to the file
+						with open('data/bday.json', mode='w', encoding='utf-8') as f:
+							bday.update(new_bday)
+							json.dump(bday, f, indent=2)
+
+					#okay...now we'll ask for a day
+					print(self.sendMessage({
+						"chat_id": chat_id,
+						"text": "Select a month, " + user_first_name + ".",
+						"reply_to_message_id": looking_for_reply_id,
+						"reply_markup": {
+							"keyboard": days,
+							"one_time_keyboard": True
+						}
+					}).json())
+				elif int(data["message"]["message_id"]) == (looking_for_reply_id + 2): #second reply with a day...
+					user_id = data["message"]["from"]["id"]
+					selected_day = data["message"]["text"]
+					#print(selected_day)
+
+					#load data...
+					with open('data/bday.json', 'r', encoding='utf-8') as f:
+						bday = json.load(f)
+						
+					#overwrite the previous (possibly blank) value
+					bday[str(user_id)]["day"] = selected_day
+
+					#dump it back in the file
+					with open('data/bday.json', 'w', encoding='utf-8') as f:
+						json.dump(bday, f, indent=2)
+
+					print(self.sendMessage({
+						"chat_id": chat_id,
+						"text": "Thanks for using " + self.bot_info["username"] + "," + user_first_name + "!\nYou'll receive a notification on your birthday. Stay tuned &#128513;",
+						"parse_mode": "html"
+					}).json())
 				else:
 					print("Not a reply to /birthday")
 			else:

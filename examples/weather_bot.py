@@ -122,23 +122,23 @@ class Bot(dokkaebi.Dokkaebi):
 				#city could be given along with state and country
 				if len(user_parameters) == 3: #city, state, and country were given
 					city = " ".join(user_parameters[:(len(user_parameters) - 2)])
-					print(city)
+					#print(city)
 					state = user_parameters[len(user_parameters) - 2]
-					print(state)
+					#print(state)
 					country_code = user_parameters[len(user_parameters) - 1]
-					print(country_code)
+					#print(country_code)
 					
 				elif len(user_parameters) == 2: #as an assumption, only the city and state/country were given
 					city = " ".join(user_parameters[:(len(user_parameters) - 1)])
-					print(city)
+					#print(city)
 					state = user_parameters[len(user_parameters) - 1]
-					print(state)
+					#print(state)
 					country_code = user_parameters[len(user_parameters) - 1]
-					print(country_code)
+					#print(country_code)
 
 				else: #otherwise it was just a city so grab it and put it in the city string
 					city = user_parameters
-					print(city)
+					#print(city)
 
 				#remove any special characters
 				city = city.translate(str.maketrans('', '', string.punctuation))
