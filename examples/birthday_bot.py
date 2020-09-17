@@ -176,7 +176,7 @@ class Bot(dokkaebi.Dokkaebi):
 					#okay...now we'll ask for a day
 					print(self.sendMessage({
 						"chat_id": chat_id,
-						"text": "Select a month, " + user_first_name + ".",
+						"text": "Select a day, " + user_first_name + ".",
 						"reply_to_message_id": looking_for_reply_id,
 						"reply_markup": {
 							"keyboard": days,

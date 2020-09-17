@@ -61,7 +61,7 @@ class CheckBirthdays(dokkaebi.Dokkaebi):
 
 hbd = CheckBirthdays(hook_data)
 
-schedule.every().day.at('18:00').do(hbd.happyBirthday)
+schedule.every().day.at('20:00').do(hbd.happyBirthday)
 
 while True:
 	schedule.run_pending()

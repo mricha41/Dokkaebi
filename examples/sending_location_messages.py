@@ -54,6 +54,39 @@ class Bot(dokkaebi.Dokkaebi):
 					"text": "Thanks for using "  + self.bot_info["username"] + ", " + user_first_name + "!"
 				}
 				print(self.sendMessage(msg).json())
+			elif command in ["/findme", "/findme@" + self.bot_info["username"]]:
+				location = {
+					"chat_id": chat_id,
+					"latitude": 19.741755,
+					"longitude": -155.844437,
+					"live_period": 240 #keep alive long enough to make an edit - adjust as necessary
+				}
+				
+				self.last_location_message = self.sendLocation(location).json()["result"]
+				print(self.last_location_message["message_id"])
+			elif command in ["/findmenow", "/findmenow@" + self.bot_info["username"]]:
+				location = {
+					"chat_id": chat_id,
+					"message_id": int(self.last_location_message["message_id"]),
+					"latitude": 1.924992,
+					"longitude": 73.399658
+				}
+				self.editMessageLiveLocation(location)
+			elif command in ["/dontfindme", "/dontfindme@" + self.bot_info["username"]]:
+				location = {
+					"chat_id": chat_id,
+					"message_id": int(self.last_location_message["message_id"])
+				}
+				self.stopMessageLiveLocation(location)
+			elif command in ["/venue", "/venue@" + self.bot_info["username"]]:
+				venue = {
+					"chat_id": chat_id,
+					"latitude": 33.755556,
+					"longitude": -84.4,
+					"title": "Mercedes-Benz Stadium - Atlanta",
+					"address": "1 AMB Drive NW Atlanta, GA 30313"
+				}
+				self.sendVenue(venue)
 			else:
 				msg = {
 					"chat_id": chat_id,
