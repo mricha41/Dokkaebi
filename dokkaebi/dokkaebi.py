@@ -1139,7 +1139,7 @@ class Dokkaebi(object):
 		to the console and returned.
 		"""
 		url = 'https://api.telegram.org/bot' + self.webhook_config["token"] + '/restrictChatMember'
-		r = requests.post(url, data = user_data)
+		r = requests.post(url, json = user_data)
 
 		if(r.status_code == 200):
 			print("Member restrictions set...")

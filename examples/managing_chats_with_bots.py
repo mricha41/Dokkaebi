@@ -68,13 +68,13 @@ class Bot(dokkaebi.Dokkaebi):
 					"user_id": None, 
 					"permissions": {
 						"can_send_messages": True,
-						"can_send_media_messages": True,
-						"can_send_polls": True,
-						"can_send_other_messages": True,
-						"can_add_web_page_previews": True,
-						"can_change_info": True,
-						"can_invite_users":	True,
-						"can_pin_messages":	True,
+						"can_send_media_messages": False,
+						"can_send_polls": False,
+						"can_send_other_messages": False,
+						"can_add_web_page_previews": False,
+						"can_change_info": False,
+						"can_invite_users":	False,
+						"can_pin_messages":	False,
 					}
 				}).json()) #provide your own user_id
 			elif command in ["/promote", "/promote@" + self.bot_info["username"]]:
@@ -95,7 +95,7 @@ class Bot(dokkaebi.Dokkaebi):
 				#of chat to view the error information in the json object
 				print(self.setChatAdministratorCustomTitle({
 					"chat_id": chat_id, 
-					"user_id": self.bot_info["id"],
+					"user_id": None,
 					"custom_title": "Mr. Bot Person"
 				}).json())
 			elif command in ["/chatpermissions", "/chatpermissions@" + self.bot_info["username"]]:
