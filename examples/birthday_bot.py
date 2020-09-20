@@ -38,7 +38,8 @@ hook_data = {
 #this copy of the data for example storeage/retrieval
 bot_commands = {
 	"commands": [
-		{'command': 'start', 'description': 'starts the bot.', 'example': "Just issue /start in the Telegram message box."}
+		{'command': 'start', 'description': 'starts the bot.', 'example': "Just issue /start in the Telegram message box."},
+		{'command': 'mybirthday', 'description': 'enter your birthday information.', 'example': "Just issue /mybirthday in the Telegram message box and follow the prompts."}
 	]
 }
 
@@ -108,7 +109,7 @@ class Bot(dokkaebi.Dokkaebi):
 					
 					#print(t.rstrip())
 					self.sendMessage(msg)
-				elif command in ["/birthday", "/birthday@" + self.bot_info["username"]]:
+				elif command in ["/mybirthday", "/mybirthday@" + self.bot_info["username"]]:
 					reply_id = data["message"]["message_id"]
 					print(self.sendMessage({
 						"chat_id": chat_id,
@@ -121,8 +122,8 @@ class Bot(dokkaebi.Dokkaebi):
 					}).json())
 
 					self.last_reply_id = reply_id + 1
-					print("reply id: {}".format(reply_id))
-					print("last reply id: {}".format(self.last_reply_id))
+					#print("reply id: {}".format(reply_id))
+					#print("last reply id: {}".format(self.last_reply_id))
 
 		else:
 			#check for a reply, since it's not a command
@@ -138,9 +139,9 @@ class Bot(dokkaebi.Dokkaebi):
 
 			if self.last_reply_id and self.last_reply_id != None:
 				looking_for_reply_id = self.last_reply_id + 1
-				print("last reply id: {}".format(self.last_reply_id))
-				print("looking for id: {}".format(looking_for_reply_id))
-				print("actual id: {}".format(data["message"]["message_id"]))
+				#print("last reply id: {}".format(self.last_reply_id))
+				#print("looking for id: {}".format(looking_for_reply_id))
+				#print("actual id: {}".format(data["message"]["message_id"]))
 				if int(data["message"]["message_id"]) == looking_for_reply_id: #first reply with a month...
 					user_id = data["message"]["from"]["id"]
 					selected_month = data["message"]["text"]
@@ -153,6 +154,7 @@ class Bot(dokkaebi.Dokkaebi):
 					#update it if it already exists...
 					if bday.get(str(user_id)):
 						bday[str(user_id)]["month"] = selected_month
+						bday[str(user_id)]["chat_id"] = chat_id
 						#write it out to the file
 						with open('data/bday.json', mode='w', encoding='utf-8') as f:
 							json.dump(bday, f, indent=2)
